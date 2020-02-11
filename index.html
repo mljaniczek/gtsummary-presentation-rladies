@@ -30,7 +30,12 @@ class: center
 background-image: url(images/gtsummary_logo.png)
 background-size: contain
 
+
+
 # {gtsummary} package
+
+
+
 
 ???
 
@@ -54,7 +59,6 @@ A special kind of confidence interval formula instead of the default?
   - Summarize regression models
   - Customize tables
   - Report statistics from {gtsummary} tables inline in R Markdown
-
 ]
 
 ---
@@ -69,7 +73,7 @@ A special kind of confidence interval formula instead of the default?
   
   * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
   
-* Install gtsummary with the following code. 
+* Install {gtsummary} with the following code: 
 ]
 
 
@@ -147,7 +151,7 @@ all functions grouped by the part of a table they modify
 
 ♥ PDF Output
 
-⚠ MS Word Output via RTF, requires re-sizing of tables by hand
+⚠ MS Word Output via RTF still in dev, requires re-sizing of tables by hand
 ]
 
 .pull-right[
@@ -163,43 +167,49 @@ all functions grouped by the part of a table they modify
 
 ♥ MS Word Output
 ]
+
+**We built {gtsummary} as a companion to {gt} and highly recommend it!** 
+
 ]
 .footnote[All examples shown use {gt} print engine]
 
 ---
 # **trial** dataset overview
 
-.large[
+.pull-left[
+
+
+```r
+*head(trial, 3)
+```
+
+```
+## # A tibble: 3 x 8
+##   trt      age marker stage grade response death ttdeath
+##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 Drug A    23  0.16  T1    II           0     0      24
+## 2 Drug B     9  1.11  T2    I            1     0      24
+## 3 Drug A    31  0.277 T1    II           0     0      24
+```
+
+&lt;p align="center"&gt;&lt;img src="images/gt_trial_info.png" width=60%&gt;
+]
+
+.medium[
+.pull-right[
 * Throughout this presentation examples will use the `trial` dataset, included with {gtsummary}. 
 
 * Dataset contains baseline characterstics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
 
 * Variables have label attributes assigned using the `labelled` package. 
-]
 
-.pull-left[
-
+* For simplicity in this presentation, subset data to a few variables of interest:
 
 ```r
-head(trial)
+sm_trial &lt;- trial %&gt;% 
+  select(trt, age, response, grade)
 ```
-
-```
-## # A tibble: 6 x 8
-##   trt      age marker stage grade response death ttdeath
-##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;
-## 1 Drug A    23  0.16  T1    II           0     0    24  
-## 2 Drug B     9  1.11  T2    I            1     0    24  
-## 3 Drug A    31  0.277 T1    II           0     0    24  
-## 4 Drug A    NA  2.07  T3    III          1     1    17.6
-## 5 Drug A    51  2.77  T4    III          1     1    16.4
-## 6 Drug B    39  0.613 T4    I            0     1    15.6
-```
-
 ]
-
-.pull-right[
-&lt;p align="right"&gt;&lt;img src="images/gt_trial_info.png" width=70%&gt;
 ]
 
 
@@ -212,58 +222,53 @@ class: inverse, center, middle
 
 ---
 # {gtsummary} summarize data with tbl_summary()
-
-.large[**Example: Summarizing clinical trial data**]
 .pull-left[
-First subset data to a few variables of interest:
+.large[**Example: Summarizing clinical trial data**]
 
-```r
-sm_trial &lt;-
-  trial %&gt;%
-  select(trt, age, response, grade)
-```
-
-Next produce a table of descriptive statistics
+Produce a table of descriptive statistics using one line of code:
 
 
 ```r
-*sm_trial %&gt;% tbl_summary()
+*tbl_summary(sm_trial)
 ```
+
 
 Notice some nice default behaviors:
-- Variable types detected and descriptive statistics calculated
+- Detects variable types of input data and calculates descriptive statistics
+  - Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data.
+- By default, variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.
 - Recognizes `NA` values as "missing" and lists them as unknown
 - Label attributes automatically printed
-- Variable levels indented and footnotes added _{gt}_
+- Variable levels indented and footnotes added _({gt})_
 
 ]
 .pull-right[
-&lt;p align="center"&gt;&lt;img src="images/tbl_summary_1a.png" width=60%&gt;&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_1a.png" width=62%&gt;&lt;/p&gt;
 ]
 
 ???
 - This is an abbreviated version of the example data used in the package help files/documentation. 
 
+- Returns a nicely formatted table with sensible rounding and formatting
+
 ---
 # {gtsummary} summarize data with tbl_summary()
 .pull-left[
-.large[
-**The Basic tbl_summary() Code**
-]
+### **Start customizing using arguments and pipe operator `%&gt;%` to string additional functions together**
 
 
 ```r
 tbl_summary_1 &lt;- sm_trial %&gt;%
-  tbl_summary(by = trt) %&gt;%
-  add_p()
+* tbl_summary(by = trt) %&gt;%
+* add_p()
 ```
 
 .medium[
-- Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data.
+- `by =` argument to split table by a categorical variable
+- `add_p()` - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
+- `add_overall()` - to add back in an overall summary of the data (not split by the `by` argument)
 
-- By default, variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.
 
-- add_p() - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
 ]
 ]
 .pull-right[
@@ -296,7 +301,7 @@ tbl_summary_1 &lt;- sm_trial %&gt;%
 
 .pull-left[
 .large[
-**Start Customizing Using Arguments**
+**Customize further using formula syntax and tidy selectors**
 ]
 
 
@@ -305,10 +310,10 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
   tbl_summary(
     by = trt,
     statistic = list(
-      all_continuous() ~ "{mean} ({sd})",
-      all_categorical() ~ "{n} / {N} ({p}%)"), 
-    label = vars(age) ~ "Patient Age") %&gt;%
-  add_p(test = all_continuous() ~ "t.test")
+*     all_continuous() ~ "{mean} ({sd})",
+*     all_categorical() ~ "{n} / {N} ({p}%)"),
+*   label = vars(age) ~ "Patient Age") %&gt;%
+* add_p(test = all_continuous() ~ "t.test")
 ```
 
 
@@ -334,287 +339,349 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
     - it's like `case_when()`, condition/variable on LHS and result on RHS
     - one formula doesn't need to be in a list, but more than one must be listed
 
-- the vignette has examples with more examples
+- the vignette has more examples
 
 
 ---
-# {gtsummary} tbl_summary() vs. fmt_table1()
 
-.pull-left[
-
-.large[
-**fmt_table1()**
-]
-
-
-```r
-sm_trial %&gt;%
-  fmt_table1(
-    by = "trt",
-    statistic = list(
-      ..continuous.. = "{mean} ({sd})",
-      ..categorical.. = "{n} / {N} ({p}%)"
-    ),
-    label = list(age = "Patient Age")
-  ) %&gt;%
-  add_comparison(test = continuous = "t.test")
-```
-
-.large[
-- `by` argument quoted
-- pass named lists to arguments 
-
-]
-]
-
-.pull-right[
-
-.large[
-**tbl_summary()**
-]
-
-
-```r
-sm_trial %&gt;%
-  tbl_summary(
-    by = trt,
-    statistic = list(
-      all_continuous() ~ "{mean} ({sd})",
-      all_categorical() ~ "{n} / {N} ({p}%)"
-    ),
-    label = vars(age) ~ "Patient Age"
-  ) %&gt;%
-  add_p(test = all_continuous() ~ "t.test")
-```
-
-
-.large[
-- `by` argument unquoted
-- **pass formulas to arguments** 
-]
-]
-
----
 # {gtsummary} tbl_summary() Formulas
 .large[
 **Formulas**
 
 
-- Most arguments to `tbl_summary()` now require formula syntax, and provide many more options to easily select the table variables you want to modify.   
+- Most arguments to `tbl_summary()` require formula syntax, and provide many more options to easily select the table variables you want to modify. More on that later.
 &lt;br&gt;
 &lt;br&gt;
 
 .center[
 
-**select variables ~ specifiy what you want to do** 
+**select variables ~ specify what you want to do** 
 ]
 ]
 
 ???
 - case_when uses similar syntax 
----
-# {gtsummary} tbl_summary() Formulas
-.large[
-**Formulas**
-
-
-- Most arguments to `tbl_summary()` now require formula syntax, and provide many more options to easily select the table variables you want to modify.   
-
-.center[
-
-&lt;br&gt;
-
-**select variables ~ specifiy what you want to do** 
-
-]
-
-
-```r
-tbl_summary(
-  by = trt,
-  statistic = vars(age) ~ "{mean} ({sd})" 
-)
-```
-]
-
-
----
-# {gtsummary} tbl_summary() Formulas
-.large[
-**Formulas**
-.center[
-
-**select variables ~ specifiy what you want to do** 
-]
-
-- **select variables**
-    - use `vars()`, e.g. `vars(age) ~ ...`
-    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`
-    - use attribute (e.g `all_character() ~ ...`) or type (e.g. , `all_continuous() ~ ...`)
-    
-- **specifiy what you want to do** (depends on the argument)
-    - change the statistic you report using {glue} syntax. e.g `statistic = ... ~ "{mean} ({sd})"`
-    - pass a string to change labels 
-]
-
----
-# {gtsummary} tbl_summary() Formulas
-
-.pull-left[
-
-```r
-tbl_summary_4 &lt;- sm_trial %&gt;%
-  tbl_summary(
-    by = trt,
-*   type = vars(response) ~ "categorical",
-*   statistic = all_continuous() ~ "{mean} ({sd})",
-*   digits = vars(age) ~ c(0, 1)
-  ) %&gt;%
-  add_p(test = all_continuous() ~ "t.test") 
-```
-
-.large[
-- Report levels for the response variable.
-- Report mean instead of median (using glue)
-- Modify the default rounding for age.
-
-
-]
-]
-.pull-right[
-&lt;p align="center"&gt;&lt;img src="images/tbl_summary_4.png" width=100%&gt;&lt;/p&gt;
-]
-
-???
-
-- further discuss formula notation
-    - just like {gt} can use both select helpers OR characters vector of names
-
-- discuss digits and how it's used
-
-- discuss `stat_label = `, and mention the footnote was omitted
 
 ---
 # {gtsummary} summarize data with tbl_summary()
 
 .large[
-**New `tbl_summary` Features**
+**Additional `tbl_summary` Features (review [vignette](http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html) for more details)**
+]
 
-- Use tidyselect and additional selector functions for arguments 
-
-- Write custom functions for calculating p-values 
-
+.medium[
+- Use {tidyselect} functions to select variables for customization
+- Write custom functions for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
+- Missing data options
 - Table footnotes (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` )
-
-- Sort variables by significance (`sort_p()`)
-
-- Calculate cell percents and row percents (default is column-wide)
-
-- Only report p-values for select variables (`add_p(exclude = ...)`)
-
-- Improved rounding options and ability to set global options for rounding p-values
-
+- Sort variables by significance (`sort_p()`); sort categorical variables by frequency  
+- Calculate cell percents and row percents (default is column-wide)  
+- Only report p-values for select variables (`add_p(include = ...)`); report q-values (like false discovery rate)  
+- Rounding options and ability to set global options for rounding p-values
 ]
+
+
 
 ???
-- these are new features many added by request
+- There is more I'm not covering here. Many options in the vignette.
+
+
 
 ---
-# {gtsummary} tbl_summary() advanced customization
-.large[**Advanced Customization Using {gt}**
 
-- It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
-
-- Every function in {gt} is available to use with a {gtsummary} object.
-
-1. Create a {gtsummary} table.
-
-1. Convert the table to a {gt} object with the `as_gt()` function.
-
-1. Continue formatting as a {gt} table with any {gt} function.
-]
-
-???
-
-Discuss `as_gt()` and how to use
+class: inverse, center, middle
+# tbl_regression()
 
 ---
-# {gtsummary} tbl_summary() advanced customization
-.large[**Advanced Customization Using {gt}**
-
-- tab_header() - add a table title
-
-- tab_spanner() - add headers that span columns
-
-- tab_options() - change table padding and font size
-
-- tab_footnote() - add additional footnotes to table
-
-And many more! https://gt.rstudio.com/
-]
-
----
-# {gtsummary} tbl_summary() advanced customization
+# {gtsummary} summarize models with tbl_regression()
 
 .pull-left[
-.large[**Advanced Customization Using {gt}**]
+.large[
+**Raw model output**
+
+⚠ Difficult to work with
+
+⚠ Format varies from different types of models
+
+⚠ Need to exponentiate betas to get odds ratios from a logistic regression etc.
+]
+]
+
+.pull-right[
+
+```r
+m1 &lt;- glm(response ~ trt + grade + age, 
+          data = trial,
+          family = binomial) 
+*m1
+```
+
+```
+## 
+## Call:  glm(formula = response ~ trt + grade + age, family = binomial, 
+##     data = trial)
+## 
+## Coefficients:
+## (Intercept)    trtDrug B      gradeII     gradeIII  
+##   -1.694687     0.124330    -0.160518     0.007672  
+##         age  
+##    0.019000  
+## 
+## Degrees of Freedom: 182 Total (i.e. Null);  178 Residual
+##   (17 observations deleted due to missingness)
+## Null Deviance:	    228.6 
+## Residual Deviance: 225.3 	AIC: 235.3
+```
+]
+
+
+???
+
+- it's not pretty
+
+- most often I want the odds ratios from a logistic regression, not the betas
+
+- format from every type of model is different and difficult to work with
+---
+# {gtsummary} summarize models with tbl_regression()
+
+
+
+.pull-left[
+.large[
+
+**`broom::tidy() output**
+
+♥ Using `broom::tidy()` a step in the right direction!
+
+♥ All models returned with consistent table format (term, estimates, standard errors...)
+
+⚠ Does not include reference groups
+
+⚠ Needs additional modification before it can be presented 
+]
+]
+
+.pull-right[
+
+```r
+*broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE)
+```
+
+```
+## # A tibble: 5 x 7
+##   term  estimate std.error statistic p.value conf.low conf.high
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Int~    0.184    0.630    -2.69   0.00715   0.0509     0.610
+## 2 trtD~    1.13     0.321     0.387  0.699     0.603      2.13 
+## 3 grad~    0.852    0.395    -0.406  0.685     0.389      1.85 
+## 4 grad~    1.01     0.385     0.0199 0.984     0.472      2.15 
+## 5 age      1.02     0.0114    1.67   0.0952    0.997      1.04
+```
+]
+
+???
+
+- MUCH MUCH better!
+
+- all models returned with consistent format
+
+- but does not include reference groups
+
+- still needs additional modification before it can be presented
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+### **{gtsummary} Output**
+.large[
+`tbl_regression()` accepts regression model object as input. Uses {broom} in the background, outputs table with nice defaults:
+
+  ♥ Reference groups added to the table  
+  ♥ Sensible default number rounding and formatting  
+  ♥ Label attributes printed  
+  ♥ Certain model types detected
+  ♥ Estimate header and footnote included 
+
+]
+]
+
+.pull-right[
 
 
 ```r
-tbl_summary_5 &lt;- sm_trial %&gt;%
-  tbl_summary(by = trt) %&gt;%
-  # convert from gtsummary object to gt object
-* as_gt() %&gt;%
-  # modify with gt functions
-* tab_header("Table 1: Baseline Characteristics") %&gt;%
-* tab_spanner(
-*   label = "Randomization Group",
-*   columns = starts_with("stat_")
-* ) %&gt;%
-* tab_options(
-*   table.font.size = "small",
-*   data_row.padding = gt::px(1))
+*tbl_reg_1 &lt;- tbl_regression(m1, exponentiate = TRUE)
 ```
 
 
-.footnote[More on this in the `tbl_summary()` &lt;a href="http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html#advanced-customization"&gt;vignette&lt;/a&gt;]
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1.png" width=90%&gt;&lt;/p&gt;
 ]
-.pull-right[
-&lt;p align="center"&gt;&lt;img src="images/tbl_summary_5.png" width=90%&gt;&lt;/p&gt;
-]
+???
+- This table is ready for publication in a single line of code!
+
+- That is something no other package I know of can do
+
+- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
+
+- Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
+
+- build the regression model on your own....we are not in the business of model estimation or checking
+
 ---
-class: left
-# {gtsummary} summarize data with tbl_summary()
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+.large[
+**Format variables with `tbl_regression` arguments**
+- `label` - Specify labels
+- `show_single_row` - If variable is dichotomous (e.g. Yes/No), you can choose to print regression coefficient on a single row
+]]
+
+.pull-right[
+
+```r
+tbl_reg_1a &lt;- tbl_regression(
+  m1, 
+* show_single_row = trt,
+* label = trt ~ "Treatment B vs A",
+  exponentiate = TRUE)
+```
+
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1a.png" width=90%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+.large[
+**Format values with `tbl_regression` arguments**
+- `exponentiate` - default is `FALSE`
+- `conf.level` - Specify between 0-1. Default 0.95.
+- `estimate_fun`, `pvalue_fun` - Specify functions to round and format values
+- `tidy_fun` - Specify a specific or custom tidier
+]
+]
+
+.pull-right[
+
+```r
+tbl_reg_1b &lt;- tbl_regression(
+  m1, 
+* conf.level = 0.9,
+* pvalue_fun = function(x) style_pvalue(x, digits = 2),
+  exponentiate = TRUE)
+```
+
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1b.png" width=90%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+
+```r
+library(survival)
+tbl_reg_3 &lt;- 
+  coxph(Surv(ttdeath, death) ~ trt + grade + age, 
+        data = trial) %&gt;%
+  tbl_regression(exponentiate = TRUE)
+tbl_reg_4 &lt;-
+* tbl_merge(
+*   tbls = list(tbl_reg_1, tbl_reg_3),
+*   tab_spanner = c("Tumor Response", "Time to Death")
+* )
+```
 
 .large[
-Review the tbl_summary vignette for more details
-http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
+- Build Cox regression model with same predictors as previous model.
+
+- Merge the two regression models with the same predictors and present results side-by-side.
 ]
-
-.pull-left[.large[
-- Reporting any statistic for continuous variables, including user-written functions.
-
-- More on dichotomous variables and how to specify the level printed.
-
-- Missing data options (e.g. report as a column rather than a row, always report N missing even when no missing data, modify missing text, etc.).
-]]
-.pull-right[.large[
-- Sort categorical variables by frequency.
-
-- Report row percent, rather than column percent.
-
-- Report q-values from various methods like false discovery rate.
-
-- Sort data by ascending p-values when comparisons have been made.
-]]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_4.png" width=100%&gt;&lt;/p&gt;
+]
 
 ???
 
-There is more that we are not covering here
-&lt;!-- #  --&gt;
-&lt;!-- # --- --&gt;
-&lt;!-- # ```{r child='03-tbl_regression.Rmd'} --&gt;
-&lt;!-- # ``` --&gt;
+- side-by-side regression results is common in cancer research (e.g. time to recurrence, then time to death)
+
+- stacking two or more models is also possible
+
+- easy to create custom tables that are formatted beautifully
+---
+# {gtsummary} summarize data with tbl_uvregression()
+
+.pull-left[
+
+```r
+library(survival)
+tbl_uvregression_1 &lt;- 
+* tbl_uvregression(
+*   sm_trial,
+*   method = glm,
+*   y = response,
+*   method.args = list(family = binomial),
+*   exponentiate = TRUE
+* )
+```
+
+.large[
+- Table of univariate regression models.
+
+- Specify the outcome, and the remaining variables in data frame serve as predictors.
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_uvregression_1.png" width=100%&gt;&lt;/p&gt;
+]
+
+???
+
+- Tables of univariate results can be good for exploratory analysis
+
+- Code is similar to {ggplot2} `geom_smooth()` and `stat_smooth()`
+
+- also great with time-to-event endpoint when you cannot do a `tbl_summary()` to get bivariate p-values
+
+---
+class: inverse, center, middle
+# inline_text()
+
+---
+# {gtsummary} reporting results with inline_text()
+.large[
+- Tables are important, but we often need to report results in-line in a report.
+
+- Any statistic reported in a {gtsummary} table can be extracted and reported in-line in a R Markdown document with the `inline_text()` function.
+
+
+```r
+inline_text(tbl_reg_1, variable = "trt", level = "Drug A")
+```
+
+```
+NA (95% CI NA, NA; NA)
+```
+
+- The pattern of what is reported can be modified with the `pattern = ` argument.  
+
+- Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
+]
+
+???
+
+- discuss importance of reproducible results
+
+- data is constantly updating
+
+- this functionality assures you won't miss updating a reported estimate in a document
+
+- for me, this is one the most powerful parts of the {gtsummary} package
+
+- something I've never seen in another package
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

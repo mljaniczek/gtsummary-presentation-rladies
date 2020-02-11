@@ -24,6 +24,9 @@ library(knitr)
 library(gtsummary)
 library(gt)
 set.seed(78987)
+
+theme_set(mskRvis::theme_biostat())
+
 ```
 
 
@@ -31,7 +34,12 @@ class: center
 background-image: url(images/gtsummary_logo.png)
 background-size: contain
 
+
+
 # {gtsummary} package
+
+
+
 
 ???
 
@@ -55,7 +63,6 @@ A special kind of confidence interval formula instead of the default?
   - Summarize regression models
   - Customize tables
   - Report statistics from {gtsummary} tables inline in R Markdown
-
 ]
 
 ---
@@ -70,7 +77,7 @@ A special kind of confidence interval formula instead of the default?
   
   * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Detailed tutorials 
   
-* Install gtsummary with the following code. 
+* Install {gtsummary} with the following code: 
 ]
 
 ``` {r, eval=FALSE}
@@ -146,7 +153,7 @@ all functions grouped by the part of a table they modify
 
 ♥ PDF Output
 
-⚠ MS Word Output via RTF, requires re-sizing of tables by hand
+⚠ MS Word Output via RTF still in dev, requires re-sizing of tables by hand
 ]
 
 .pull-right[
@@ -162,38 +169,46 @@ all functions grouped by the part of a table they modify
 
 ♥ MS Word Output
 ]
+
+**We built {gtsummary} as a companion to {gt} and highly recommend it!** 
+
 ]
 .footnote[All examples shown use {gt} print engine]
 
 ---
 # **trial** dataset overview
 
-.large[
+.pull-left[
+
+```{r}
+head(trial, 3) #<<
+```
+
+<p align="center"><img src="images/gt_trial_info.png" width=60%>
+]
+
+.medium[
+.pull-right[
 * Throughout this presentation examples will use the `trial` dataset, included with {gtsummary}. 
 
 * Dataset contains baseline characterstics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
 
 * Variables have label attributes assigned using the `labelled` package. 
-]
 
-.pull-left[
-
-```{r}
-head(trial)
+* For simplicity in this presentation, subset data to a few variables of interest:
+```{r, results = FALSE}
+sm_trial <- trial %>% 
+  select(trt, age, response, grade)
 ```
-
 ]
-
-.pull-right[
-<p align="right"><img src="images/gt_trial_info.png" width=70%>
 ]
 
 
 ---
 ```{r child='02-tbl_summary.Rmd'}
 ```
-<!-- #  -->
-<!-- # --- -->
-<!-- # ```{r child='03-tbl_regression.Rmd'} -->
-<!-- # ``` -->
+
+---
+```{r child='03-tbl_regression.Rmd'}
+```
 

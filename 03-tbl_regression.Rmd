@@ -4,11 +4,27 @@ class: inverse, center, middle
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-### Raw Output
+.pull-left[
+.large[
+**Raw model output**
+
+⚠ Difficult to work with
+
+⚠ Format varies from different types of models
+
+⚠ Need to exponentiate betas to get odds ratios from a logistic regression etc.
+]
+]
+
+.pull-right[
 ```{r}
-m1 <- glm(response ~ trt + grade + age, data = trial, family = binomial) #<<
-m1
+m1 <- glm(response ~ trt + grade + age, 
+          data = trial,
+          family = binomial) 
+m1 #<<
 ```
+]
+
 
 ???
 
@@ -20,10 +36,28 @@ m1
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-### {broom} Output
+
+
+.pull-left[
+.large[
+
+**`broom::tidy() output**
+
+♥ Using `broom::tidy()` a step in the right direction!
+
+♥ All models returned with consistent table format (term, estimates, standard errors...)
+
+⚠ Does not include reference groups
+
+⚠ Needs additional modification before it can be presented 
+]
+]
+
+.pull-right[
 ```{r}
 broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
 ```
+]
 
 ???
 
@@ -37,23 +71,29 @@ broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-### {gtsummary} Output
-```{r, results = FALSE}
-tbl_regression_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
-```
-```{r, include=FALSE}
-# gtsave(tbl_regression_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
-```
+.pull-left[
+### **{gtsummary} Output**
+.large[
+`tbl_regression()` accepts regression model object as input. Uses {broom} in the background, outputs table with nice defaults:
 
-.pull-left[.large[
-- `tbl_regression()` accepts regression model object as inputs.
+  ♥ Reference groups added to the table  
+  ♥ Sensible default number rounding and formatting  
+  ♥ Label attributes printed  
+  ♥ Certain model types detected
+  ♥ Estimate header and footnote included 
 
-- Reference groups added to the table.
-
-- Logistic regression model with odds ratio header and footnote.
-]]
+]
+]
 
 .pull-right[
+
+```{r, results = FALSE}
+tbl_reg_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
+```
+```{r, include=FALSE}
+# gtsave(tbl_reg_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
+```
+
 <p align="center"><img src="images/tbl_regression_1.png" width=90%></p>
 ]
 ???
@@ -67,6 +107,56 @@ tbl_regression_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
 
 - build the regression model on your own....we are not in the business of model estimation or checking
 
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+.large[
+**Format variables with `tbl_regression` arguments**
+- `label` - Specify labels
+- `show_single_row` - If variable is dichotomous (e.g. Yes/No), you can choose to print regression coefficient on a single row
+]]
+
+.pull-right[
+```{r, results = FALSE}
+tbl_reg_1a <- tbl_regression(
+  m1, 
+  show_single_row = trt, #<<
+  label = trt ~ "Treatment B vs A", #<<
+  exponentiate = TRUE)
+```
+```{r, include=FALSE}
+#gtsave(tbl_reg_1a %>% as_gt(), filename = "images/tbl_regression_1a.png")
+```
+<p align="center"><img src="images/tbl_regression_1a.png" width=90%></p>
+]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+.large[
+**Format values with `tbl_regression` arguments**
+- `exponentiate` - default is `FALSE`
+- `conf.level` - Specify between 0-1. Default 0.95.
+- `estimate_fun`, `pvalue_fun` - Specify functions to round and format values
+- `tidy_fun` - Specify a specific or custom tidier
+]
+]
+
+.pull-right[
+```{r, results = FALSE}
+tbl_reg_1b <- tbl_regression(
+  m1, 
+  conf.level = 0.9, #<<
+  pvalue_fun = function(x) style_pvalue(x, digits = 2), #<<
+  exponentiate = TRUE)
+```
+```{r, include=FALSE}
+#gtsave(tbl_reg_1b %>% as_gt(), filename = "images/tbl_regression_1b.png")
+```
+<p align="center"><img src="images/tbl_regression_1b.png" width=90%></p>
+]
 
 ---
 # {gtsummary} summarize models with tbl_regression()
@@ -74,18 +164,18 @@ tbl_regression_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
 .pull-left[
 ```{r, results = FALSE}
 library(survival)
-tbl_regression_3 <- 
+tbl_reg_3 <- 
   coxph(Surv(ttdeath, death) ~ trt + grade + age, 
         data = trial) %>%
   tbl_regression(exponentiate = TRUE)
-tbl_regression_4 <-
+tbl_reg_4 <-
   tbl_merge( #<<
-    tbls = list(tbl_regression_1, tbl_regression_3), #<<
+    tbls = list(tbl_reg_1, tbl_reg_3), #<<
     tab_spanner = c("Tumor Response", "Time to Death") #<<
   ) #<< 
 ```
 ```{r, include=FALSE}
-# gtsave(tbl_regression_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
+# gtsave(tbl_reg_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
 ```
 .large[
 - Build Cox regression model with same predictors as previous model.
@@ -142,75 +232,6 @@ tbl_uvregression_1 <-
 
 ---
 class: inverse, center, middle
-# tbl_survival()
-
----
-# {gtsummary} summarize data with tbl_survival()
-.pull-left[
-```{r, plot-last-surv, fig.show = 'hide'}
-fit1 <- survfit(Surv(ttdeath, death) ~ trt, #<<
-                data = trial) #<<
-
-survminer::ggsurvplot(
-  fit = fit1, 
-  xlab = "Months",
-  ylab = "Overall survival probability",
-  legend.title = "Treatment Group",
-  legend.labs = c("Drug", "Placebo"),
-  break.x.by = 6, 
-  censor = FALSE,
-  risk.table = TRUE,
-  risk.table.y.text = FALSE
-)
-```
-]
-
-.pull-right[
-```{r, ref.label = 'plot-last-surv', echo = FALSE}
-```
-]
-
-???
-
-- You've probably seen something like this before
-
-- It's a Kaplan-Meier curve.  It shows the probability of being free from an event (e.g. cancer recurrence after treatment)
-
-- we can use {gtsummary} to grab estimates from curves like this
----
-# {gtsummary} summarize data with tbl_survival()
-
-.pull-left[
-```{r, results = FALSE}
-tbl_survival_1 <- fit1 %>%
-  tbl_survival(times = c(12, 24), #<<
-               label = "{time} Month") #<<
-```
-```{r, include=FALSE}
-# gtsave(tbl_survival_1 %>% as_gt(), filename = "images/tbl_survival_1.png")
-```
-
-- First, use `survfit()` to estimate survival times.
-
-- Create table of estimates with `tbl_survival()`.
-
-- Can use this function to print survival quantiles as well, e.g. median survival.
-
-```{r, results = FALSE}
-fit2 <- survfit(Surv(ttdeath, death) ~ 1, 
-                data = trial)
-tbl_median_survival <- fit2 %>%
-  tbl_survival(probs = c(0.5),
-               header_estimate = "**Months**",
-               label = "Median Survival")
-```
-]
-.pull-right[
-<p align="center"><img src="images/tbl_survival_1.png" width=85%></p>
-]
-
----
-class: inverse, center, middle
 # inline_text()
 
 ---
@@ -221,7 +242,7 @@ class: inverse, center, middle
 - Any statistic reported in a {gtsummary} table can be extracted and reported in-line in a R Markdown document with the `inline_text()` function.
 
 ```{r, comment=""}
-inline_text(tbl_regression_1, variable = "trt", level = "Drug A")
+inline_text(tbl_reg_1, variable = "trt", level = "Drug A")
 ```
 
 - The pattern of what is reported can be modified with the `pattern = ` argument.  
