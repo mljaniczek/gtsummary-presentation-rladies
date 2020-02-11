@@ -2,7 +2,7 @@
 title: "gtsummary"
 subtitle: "Creating publication-ready analytical tables"
 author: "Margie Hannum <br/><br/>Memorial Sloan Kettering Cancer Center<br/><br/>"
-date: "September 17, 2019"
+date: "February 26, 2020"
 output:
   xaringan::moon_reader:
     css: [ninjutsu, default, metropolis, metropolis-fonts, "my-theme.css"]
@@ -28,125 +28,69 @@ set.seed(78987)
 
 
 class: center
-background-image: url(images/biostatr_logo.png)
+background-image: url(images/gtsummary_logo.png)
 background-size: contain
 
-# {biostatR} package
+# {gtsummary} package
 
 ???
-- the same biostatR we all love, but with improvements
+
+-Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
+
+-Other packages out there to create similar tables are opinionated without being very customizable
+
+-What if a collaborator wants 2 decimal places? 3? Mean (Range) for some variables and Median (IQR) for others? Bolding significant p-values? 
+A special kind of confidence interval formula instead of the default?
+
+- Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
+
 
 ---
-background-image: url("https://media.giphy.com/media/uELDhoOZdSnUk/giphy.gif")
-background-size: contain
-# {biostatR} v1.0
- 
-???
-- v1.0 has some exciting updates
 
-- other departments loved bits of what we had done
-    - and they stole them
-    
-    - we exported many of our functions to mskR
-      - color palette
-      - symbolic links
-      - working with MSK github
-    
-- we wanted the change the structure to share resources across the hospital
----
-# {biostatR} v1.0
-
-<p align="center"><img src="images/README-biostatR_umbrella2.PNG" width=60%></p>
-
-???
-- the new look of biostatR, similar to the tidyverse
-
-- when you load biostatR, three packages are loaded
-
-- the **mskR** packages are used throughout the hospital
-
-- more people get to use the functions we've written, and we get more functionality that others have written.
-
----
-# {biostatR} v1.0 - Organization
-
-.pull-left[
-### gtsummary
-- Bulk of the former biostatR lives here
-
-- Data summary functions (e.g. for Table 1), 
-
-- Regression model summary functions
-
-- Functions for reporting results inline
-
-- Rounding/Formatting functions
-
-- Kaplan-Meier summary functions
-]
-
-.pull-right[
-### mskRvis
-
-- MSK-themed ggplot color palette
-
-- MSK-themed markdown template
-
-- More coming soon...
-
-### mskRutils
-
-- Automated project setup functions
-
-- Setting symbolic links
-
-- Other functions for working with MSK Enterprise GitHub
-]
-
----
-# {biostatR} v1.0 - Package Website
+# {gtsummary} Overview
 
 .large[
-* Package Website: http://biostatR.mskcc.org
+* Package will create your tabular summaries, with sensible defaults that are highly customizable
+  - Summarize data frames/tibbles
+  - Summarize regression models
+  - Customize tables
+  - Report statistics from {gtsummary} tables inline in R Markdown
 
-  * Installation instructions
+]
+
+---
+# {gtsummary} v1.2.5 - Package Website
+
+.large[
+* Package Website: http://www.danieldsjoberg.com/gtsummary/
+
+  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Installation instructions
   
-  * Thorough documentation on every function
+  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Thorough documentation on every function
   
-  * Detailed tutorials 
+  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Detailed tutorials 
   
-* Install biostatR with the following code
+* Install gtsummary with the following code. 
 ]
 
 ``` {r, eval=FALSE}
-install.packages("remotes")
-remotes::install_git("https://github.mskcc.org/datadojo/biostatR.git")
-
-library(biostatR)
--- Attaching packages ------------------------------ biostatR 1.0.0 --
-v gtsummary 1.2.1          v mskRutils 0.2.0     
-v mskRvis   0.1.0          
+install.packages("gtsummary")          
 ```
+
+.large[
+* Also recommended to install the development version of {gt} from GitHub.
+]
+``` {r, eval=FALSE}
+install.packages("remotes")
+remotes::install_github("rstudio/gt")        
+```
+
+
 
 ???
 - visit the website and give quick tour
 ---
-# {gtsummary} Overview
 
-.large[
-* Package will create your tabular summaries
-
-* {gt} package is the default table printing engine 
-  - customization ☄
-  - easy-to-learn ★
-
-* `kable()` from {knitr} may still be used
-  - no footnotes ☒
-  - no spanning headers ☒
-  - fewer customization options ☒
-]
-
----
 # {gt} - an aside
 
 .large[
@@ -164,20 +108,30 @@ v mskRvis   0.1.0
 ]
 ]
 
+???
+-Gauge room for who uses kable/gt
+
+-When Dan started developing gtsummary last year it was originally designed for our tables to be printed using knitr::kable(). But mid-last-year Rich Iannone from RStudio started developing a table construction package called {gt}, and even though it’s still in development (and not on CRAN), since it’s from the RStudio world we anticipate it will have full support and eventually be widely adopted, so he switched our package to take full advantage of the functionality {gt} offers. Still can use our package and print with kable, more on that later.
+
 ---
 # {gt} - an aside
 .pull-left[
-"We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
-<img src="images/gt_parts_of_a_table.png" width=110%>
+* "We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
+
+* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
+
 ]
 .pull-right[
-<img src="images/gt_functions.svg" width=90%>
+<img src="images/gt_parts_of_a_table.png" width=110%>
 ]
+
+Image source: https://gt.rstudio.com/
 
 ???
 the gt documentation is great!
 
 all functions grouped by the part of a table they modify
+
 ---
 # {gtsummary} Print Engines - gt or kable?
 .large[
@@ -211,67 +165,35 @@ all functions grouped by the part of a table they modify
 ]
 .footnote[All examples shown use {gt} print engine]
 
+---
+# **trial** dataset overview
 
-# New Features in {gtsummary}
+.large[
+* Throughout this presentation examples will use the `trial` dataset, included with {gtsummary}. 
+
+* Dataset contains baseline characterstics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
+
+* Variables have label attributes assigned using the `labelled` package. 
+]
 
 .pull-left[
-**`tbl_summary`**
 
-- Use tidyselect and additional selector functions for arguments 
+```{r}
+head(trial)
+```
 
-- Sort variables by significance with `sort_p()`
-
-- Accepts custom functions for calculating p-values in `add_p()` 
-
-- Table footnotes indicating statistics presented 
-
-- Calculate column, row, and cell percents in `tbl_summary()`
-
-- Report p-values for selected variables with `add_p(exclude = ...)`
-
-- Improved rounding options and ability to set global options for rounding p-values
 ]
+
 .pull-right[
-**`tbl_regression`**
-
-- Merge and stack regression tables to create complex and custom tables
-
-- Table footnotes defining abbreviations (e.g. OR and CI)
-
-**`tbl_survival` NEW!**
-
-- Summarize Kaplan-Meier analyses
-
-- Summarize competing risk cumulative incidence curves (coming soon!)
+<p align="right"><img src="images/gt_trial_info.png" width=70%>
 ]
 
-???
-- these are new features many added by request
 
 ---
 ```{r child='02-tbl_summary.Rmd'}
 ```
+<!-- #  -->
+<!-- # --- -->
+<!-- # ```{r child='03-tbl_regression.Rmd'} -->
+<!-- # ``` -->
 
----
-```{r child='03-tbl_regression.Rmd'}
-```
-
----
-class: center
-# {biostatR}
-.large[
-• Every function is documented further in the help file •
-
-• Check out the package website for vignettes including detailed examples and explanations •
-
-<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {biostatR} documentation <a href="http://biostatR.mskcc.org/">biostatR.mskcc.org/</a>
-
-<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {gtsummary} documentation <a href="http://www.danieldsjoberg.com/gtsummary/">danieldsjoberg.com/gtsummary/</a>
-
-<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {gt} documentation <a href="https://gt.rstudio.com/">gt.rstudio.com/</a>
-
-<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {mskRvis} documentation <a href="https://github.mskcc.org/pages/datadojo/mskRvis/index.html">github.mskcc.org/pages/datadojo/mskRvis/</a>
-
-<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {mskRutils} documentation <a href="https://github.mskcc.org/pages/datadojo/mskRutils/index.html">github.mskcc.org/pages/datadojo/mskRutils/</a>
-
-]

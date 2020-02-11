@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>gtsummary</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Margie Hannum   Memorial Sloan Kettering Cancer Center" />
+    <meta name="date" content="2020-02-26" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# gtsummary
+## Creating publication-ready analytical tables
+### Margie Hannum <br/><br/>Memorial Sloan Kettering Cancer Center<br/><br/>
+### February 26, 2020
+
+---
+
+
+
+
+
+class: center
+background-image: url(images/gtsummary_logo.png)
+background-size: contain
+
+# {gtsummary} package
+
+???
+
+-Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
+
+-Other packages out there to create similar tables are opinionated without being very customizable
+
+-What if a collaborator wants 2 decimal places? 3? Mean (Range) for some variables and Median (IQR) for others? Bolding significant p-values? 
+A special kind of confidence interval formula instead of the default?
+
+- Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
+
+
+---
+
+# {gtsummary} Overview
+
+.large[
+* Package will create your tabular summaries, with sensible defaults that are highly customizable
+  - Summarize data frames/tibbles
+  - Summarize regression models
+  - Customize tables
+  - Report statistics from {gtsummary} tables inline in R Markdown
+
+]
+
+---
+# {gtsummary} v1.2.5 - Package Website
+
+.large[
+* Package Website: http://www.danieldsjoberg.com/gtsummary/
+
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
+  
+* Install gtsummary with the following code. 
+]
+
+
+```r
+install.packages("gtsummary")          
+```
+
+.large[
+* Also recommended to install the development version of {gt} from GitHub.
+]
+
+```r
+install.packages("remotes")
+remotes::install_github("rstudio/gt")        
+```
+
+
+
+???
+- visit the website and give quick tour
+---
+
+# {gt} - an aside
+
+.large[
+.pull-left[
+* New package from RStudio
+
+* Package for printing highly customized tables
+
+* Goal is to unify code for creating tables in HTML, Word (via RTF), and PDF
+
+* Check it out! https://gt.rstudio.com/
+]
+.pull-right[
+&lt;img src="images/gt_logo.png" width=90%&gt;
+]
+]
+
+???
+-Gauge room for who uses kable/gt
+
+-When Dan started developing gtsummary last year it was originally designed for our tables to be printed using knitr::kable(). But mid-last-year Rich Iannone from RStudio started developing a table construction package called {gt}, and even though it’s still in development (and not on CRAN), since it’s from the RStudio world we anticipate it will have full support and eventually be widely adopted, so he switched our package to take full advantage of the functionality {gt} offers. Still can use our package and print with kable, more on that later.
+
+---
+# {gt} - an aside
+.pull-left[
+* "We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
+
+* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
+
+]
+.pull-right[
+&lt;img src="images/gt_parts_of_a_table.png" width=110%&gt;
+]
+
+Image source: https://gt.rstudio.com/
+
+???
+the gt documentation is great!
+
+all functions grouped by the part of a table they modify
+
+---
+# {gtsummary} Print Engines - gt or kable?
+.large[
+.pull-left[
+## gt
+
+♥ Highly Customizable 
+
+♥ All output includes informative footnotes
+
+♥ HTML Output
+
+♥ PDF Output
+
+⚠ MS Word Output via RTF, requires re-sizing of tables by hand
+]
+
+.pull-right[
+## kable
+
+⚠ Less Customizable 
+
+⚠ Footnotes and spanning headers stripped from all output
+
+♥ HTML Output
+
+♥ PDF Output
+
+♥ MS Word Output
+]
+]
+.footnote[All examples shown use {gt} print engine]
+
+---
+# **trial** dataset overview
+
+.large[
+* Throughout this presentation examples will use the `trial` dataset, included with {gtsummary}. 
+
+* Dataset contains baseline characterstics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
+
+* Variables have label attributes assigned using the `labelled` package. 
+]
+
+.pull-left[
+
+
+```r
+head(trial)
+```
+
+```
+## # A tibble: 6 x 8
+##   trt      age marker stage grade response death ttdeath
+##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;    &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 Drug A    23  0.16  T1    II           0     0    24  
+## 2 Drug B     9  1.11  T2    I            1     0    24  
+## 3 Drug A    31  0.277 T1    II           0     0    24  
+## 4 Drug A    NA  2.07  T3    III          1     1    17.6
+## 5 Drug A    51  2.77  T4    III          1     1    16.4
+## 6 Drug B    39  0.613 T4    I            0     1    15.6
+```
+
+]
+
+.pull-right[
+&lt;p align="right"&gt;&lt;img src="images/gt_trial_info.png" width=70%&gt;
+]
+
+
+---
+
+
+class: inverse, center, middle
+# tbl_summary()
+
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.large[**Example: Summarizing clinical trial data**]
+.pull-left[
+First subset data to a few variables of interest:
+
+```r
+sm_trial &lt;-
+  trial %&gt;%
+  select(trt, age, response, grade)
+```
+
+Next produce a table of descriptive statistics
+
+
+```r
+*sm_trial %&gt;% tbl_summary()
+```
+
+Notice some nice default behaviors:
+- Variable types detected and descriptive statistics calculated
+- Recognizes `NA` values as "missing" and lists them as unknown
+- Label attributes automatically printed
+- Variable levels indented and footnotes added _{gt}_
+
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_1a.png" width=60%&gt;&lt;/p&gt;
+]
+
+???
+- This is an abbreviated version of the example data used in the package help files/documentation. 
+
+---
+# {gtsummary} summarize data with tbl_summary()
+.pull-left[
+.large[
+**The Basic tbl_summary() Code**
+]
+
+
+```r
+tbl_summary_1 &lt;- sm_trial %&gt;%
+  tbl_summary(by = trt) %&gt;%
+  add_p()
+```
+
+.medium[
+- Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data.
+
+- By default, variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.
+
+- add_p() - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
+]
+]
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_2.png" width=100%&gt;&lt;/p&gt;
+]
+
+???
+- Go slow here
+
+- summarizing a data set is the MOST important analysis
+
+- summarize data first!  you will often catch mistakes.  Data is complicated, and understanding it up front is important.
+
+- Communicating a summary of the data ALONG with analytic results in necessary (others may catch mistakes you're not aware of)
+
+- {gtsummary} is for presenting results, other great packages are available for summarizing data for your self (e.g. skimr)
+
+- just one line of code
+
+- all functions beginning with `tbl_*` create a new tables
+
+- this is how I used the package 95% percent of the time...so easy
+
+- three types of data shown here (explain them)
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.pull-left[
+.large[
+**Start Customizing Using Arguments**
+]
+
+
+```r
+tbl_summary_3 &lt;- sm_trial %&gt;%
+  tbl_summary(
+    by = trt,
+    statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} / {N} ({p}%)"), 
+    label = vars(age) ~ "Patient Age") %&gt;%
+  add_p(test = all_continuous() ~ "t.test")
+```
+
+
+.medium[
+- `statistic` - Report mean and standard deviation for continuous (default is median)
+- `label` - Specify label for age
+- `type` - Specify variable types
+- `digits` - Specify number of decimals to round to
+- `test`  [`add_p()`] - Report t-test p-values all continuous (default is Wilcoxan Rank Sum)
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_3.png" width=100%&gt;&lt;/p&gt;
+]
+
+???
+
+- defaults are great, let's change the default behavior
+
+- statistics can be changed to anything...literally any R function (e.g. variance)
+
+- discuss the formula notation
+    - it's like `case_when()`, condition/variable on LHS and result on RHS
+    - one formula doesn't need to be in a list, but more than one must be listed
+
+- the vignette has examples with more examples
+
+
+---
+# {gtsummary} tbl_summary() vs. fmt_table1()
+
+.pull-left[
+
+.large[
+**fmt_table1()**
+]
+
+
+```r
+sm_trial %&gt;%
+  fmt_table1(
+    by = "trt",
+    statistic = list(
+      ..continuous.. = "{mean} ({sd})",
+      ..categorical.. = "{n} / {N} ({p}%)"
+    ),
+    label = list(age = "Patient Age")
+  ) %&gt;%
+  add_comparison(test = continuous = "t.test")
+```
+
+.large[
+- `by` argument quoted
+- pass named lists to arguments 
+
+]
+]
+
+.pull-right[
+
+.large[
+**tbl_summary()**
+]
+
+
+```r
+sm_trial %&gt;%
+  tbl_summary(
+    by = trt,
+    statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} / {N} ({p}%)"
+    ),
+    label = vars(age) ~ "Patient Age"
+  ) %&gt;%
+  add_p(test = all_continuous() ~ "t.test")
+```
+
+
+.large[
+- `by` argument unquoted
+- **pass formulas to arguments** 
+]
+]
+
+---
+# {gtsummary} tbl_summary() Formulas
+.large[
+**Formulas**
+
+
+- Most arguments to `tbl_summary()` now require formula syntax, and provide many more options to easily select the table variables you want to modify.   
+&lt;br&gt;
+&lt;br&gt;
+
+.center[
+
+**select variables ~ specifiy what you want to do** 
+]
+]
+
+???
+- case_when uses similar syntax 
+---
+# {gtsummary} tbl_summary() Formulas
+.large[
+**Formulas**
+
+
+- Most arguments to `tbl_summary()` now require formula syntax, and provide many more options to easily select the table variables you want to modify.   
+
+.center[
+
+&lt;br&gt;
+
+**select variables ~ specifiy what you want to do** 
+
+]
+
+
+```r
+tbl_summary(
+  by = trt,
+  statistic = vars(age) ~ "{mean} ({sd})" 
+)
+```
+]
+
+
+---
+# {gtsummary} tbl_summary() Formulas
+.large[
+**Formulas**
+.center[
+
+**select variables ~ specifiy what you want to do** 
+]
+
+- **select variables**
+    - use `vars()`, e.g. `vars(age) ~ ...`
+    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`
+    - use attribute (e.g `all_character() ~ ...`) or type (e.g. , `all_continuous() ~ ...`)
+    
+- **specifiy what you want to do** (depends on the argument)
+    - change the statistic you report using {glue} syntax. e.g `statistic = ... ~ "{mean} ({sd})"`
+    - pass a string to change labels 
+]
+
+---
+# {gtsummary} tbl_summary() Formulas
+
+.pull-left[
+
+```r
+tbl_summary_4 &lt;- sm_trial %&gt;%
+  tbl_summary(
+    by = trt,
+*   type = vars(response) ~ "categorical",
+*   statistic = all_continuous() ~ "{mean} ({sd})",
+*   digits = vars(age) ~ c(0, 1)
+  ) %&gt;%
+  add_p(test = all_continuous() ~ "t.test") 
+```
+
+.large[
+- Report levels for the response variable.
+- Report mean instead of median (using glue)
+- Modify the default rounding for age.
+
+
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_4.png" width=100%&gt;&lt;/p&gt;
+]
+
+???
+
+- further discuss formula notation
+    - just like {gt} can use both select helpers OR characters vector of names
+
+- discuss digits and how it's used
+
+- discuss `stat_label = `, and mention the footnote was omitted
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.large[
+**New `tbl_summary` Features**
+
+- Use tidyselect and additional selector functions for arguments 
+
+- Write custom functions for calculating p-values 
+
+- Table footnotes (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` )
+
+- Sort variables by significance (`sort_p()`)
+
+- Calculate cell percents and row percents (default is column-wide)
+
+- Only report p-values for select variables (`add_p(exclude = ...)`)
+
+- Improved rounding options and ability to set global options for rounding p-values
+
+]
+
+???
+- these are new features many added by request
+
+---
+# {gtsummary} tbl_summary() advanced customization
+.large[**Advanced Customization Using {gt}**
+
+- It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
+
+- Every function in {gt} is available to use with a {gtsummary} object.
+
+1. Create a {gtsummary} table.
+
+1. Convert the table to a {gt} object with the `as_gt()` function.
+
+1. Continue formatting as a {gt} table with any {gt} function.
+]
+
+???
+
+Discuss `as_gt()` and how to use
+
+---
+# {gtsummary} tbl_summary() advanced customization
+.large[**Advanced Customization Using {gt}**
+
+- tab_header() - add a table title
+
+- tab_spanner() - add headers that span columns
+
+- tab_options() - change table padding and font size
+
+- tab_footnote() - add additional footnotes to table
+
+And many more! https://gt.rstudio.com/
+]
+
+---
+# {gtsummary} tbl_summary() advanced customization
+
+.pull-left[
+.large[**Advanced Customization Using {gt}**]
+
+
+```r
+tbl_summary_5 &lt;- sm_trial %&gt;%
+  tbl_summary(by = trt) %&gt;%
+  # convert from gtsummary object to gt object
+* as_gt() %&gt;%
+  # modify with gt functions
+* tab_header("Table 1: Baseline Characteristics") %&gt;%
+* tab_spanner(
+*   label = "Randomization Group",
+*   columns = starts_with("stat_")
+* ) %&gt;%
+* tab_options(
+*   table.font.size = "small",
+*   data_row.padding = gt::px(1))
+```
+
+
+.footnote[More on this in the `tbl_summary()` &lt;a href="http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html#advanced-customization"&gt;vignette&lt;/a&gt;]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_5.png" width=90%&gt;&lt;/p&gt;
+]
+---
+class: left
+# {gtsummary} summarize data with tbl_summary()
+
+.large[
+Review the tbl_summary vignette for more details
+http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
+]
+
+.pull-left[.large[
+- Reporting any statistic for continuous variables, including user-written functions.
+
+- More on dichotomous variables and how to specify the level printed.
+
+- Missing data options (e.g. report as a column rather than a row, always report N missing even when no missing data, modify missing text, etc.).
+]]
+.pull-right[.large[
+- Sort categorical variables by frequency.
+
+- Report row percent, rather than column percent.
+
+- Report q-values from various methods like false discovery rate.
+
+- Sort data by ascending p-values when comparisons have been made.
+]]
+
+???
+
+There is more that we are not covering here
+&lt;!-- #  --&gt;
+&lt;!-- # --- --&gt;
+&lt;!-- # ```{r child='03-tbl_regression.Rmd'} --&gt;
+&lt;!-- # ``` --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
