@@ -212,3 +212,11 @@ sm_trial <- trial %>%
 ```{r child='03-tbl_regression.Rmd'}
 ```
 
+---
+```{r child='05-customization.Rmd'}
+```
+
+---
+```{r child='06-conclusion.Rmd'}
+```
+

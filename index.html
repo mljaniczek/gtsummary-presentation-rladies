@@ -366,21 +366,22 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 # {gtsummary} summarize data with tbl_summary()
 
 .large[
-**Additional `tbl_summary` Features (review [vignette](http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html) for more details)**
+**Additional `tbl_summary` Features**
 ]
 
 .medium[
-- Use {tidyselect} functions to select variables for customization
-- Write custom functions for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
-- Missing data options
-- Table footnotes (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` )
-- Sort variables by significance (`sort_p()`); sort categorical variables by frequency  
-- Calculate cell percents and row percents (default is column-wide)  
+- Use **{tidyselect}** functions to select variables for customization
+- Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
+- **Missing data** options
+- **Sort variables** by significance (`sort_p()`); sort categorical variables by frequency  
+- Calculate **cell percents and row percents** (default is column-wide)  
 - Only report p-values for select variables (`add_p(include = ...)`); report q-values (like false discovery rate)  
-- Rounding options and ability to set global options for rounding p-values
+- **Rounding options** and ability to **set global options** for rounding p-values
 ]
 
-
+.large[
+ Review [`tbl_summary()` vignette](http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html) for more details and examples!
+]
 
 ???
 - There is more I'm not covering here. Many options in the vignette.
@@ -422,10 +423,8 @@ m1 &lt;- glm(response ~ trt + grade + age,
 ##     data = trial)
 ## 
 ## Coefficients:
-## (Intercept)    trtDrug B      gradeII     gradeIII  
-##   -1.694687     0.124330    -0.160518     0.007672  
-##         age  
-##    0.019000  
+## (Intercept)    trtDrug B      gradeII     gradeIII          age  
+##   -1.694687     0.124330    -0.160518     0.007672     0.019000  
 ## 
 ## Degrees of Freedom: 182 Total (i.e. Null);  178 Residual
 ##   (17 observations deleted due to missingness)
@@ -470,13 +469,13 @@ m1 &lt;- glm(response ~ trt + grade + age,
 
 ```
 ## # A tibble: 5 x 7
-##   term  estimate std.error statistic p.value conf.low conf.high
-##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Int~    0.184    0.630    -2.69   0.00715   0.0509     0.610
-## 2 trtD~    1.13     0.321     0.387  0.699     0.603      2.13 
-## 3 grad~    0.852    0.395    -0.406  0.685     0.389      1.85 
-## 4 grad~    1.01     0.385     0.0199 0.984     0.472      2.15 
-## 5 age      1.02     0.0114    1.67   0.0952    0.997      1.04
+##   term        estimate std.error statistic p.value conf.low conf.high
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    0.184    0.630    -2.69   0.00715   0.0509     0.610
+## 2 trtDrug B      1.13     0.321     0.387  0.699     0.603      2.13 
+## 3 gradeII        0.852    0.395    -0.406  0.685     0.389      1.85 
+## 4 gradeIII       1.01     0.385     0.0199 0.984     0.472      2.15 
+## 5 age            1.02     0.0114    1.67   0.0952    0.997      1.04
 ```
 ]
 
@@ -682,6 +681,277 @@ NA (95% CI NA, NA; NA)
 - for me, this is one the most powerful parts of the {gtsummary} package
 
 - something I've never seen in another package
+
+---
+
+class: inverse, center, middle
+# Customization
+
+---
+# {gtsummary} tbl_summary() Formulas
+.large[
+**Formulas**
+
+
+- Most arguments to `tbl_summary()` require formula syntax, and provide many more options to easily select the table variables you want to modify.   
+
+.center[
+
+&lt;br&gt;
+
+**select variables ~ specify what you want to do** 
+
+]
+
+
+```r
+tbl_summary(
+  trial,
+  by = trt,
+  statistic = age ~ "{mean} ({sd})" 
+)
+```
+]
+
+
+---
+# {gtsummary} tbl_summary() Formulas
+.large[
+**Formulas**
+.center[
+
+**select variables ~ specifiy what you want to do** 
+]
+
+- **select variables**
+    - use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
+    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`
+    - use attribute (e.g `all_character() ~ ...`) or type (e.g. , `all_continuous() ~ ...`)
+    
+- **specify what you want to do** (depends on the argument)
+    - change the statistic you report using {glue} syntax. e.g `statistic = ... ~ "{mean} ({sd})"`
+    - pass a string to change labels 
+]
+
+---
+# {gtsummary} tbl_summary() Formulas
+
+.pull-left[
+
+```r
+tbl_summary_4 &lt;- sm_trial %&gt;%
+  tbl_summary(
+    by = trt,
+*   type = response ~ "categorical",
+*   statistic = all_continuous() ~ "{mean} ({sd})",
+*   digits = age ~ c(0, 1)
+  ) %&gt;%
+  add_p(test = list(all_continuous() ~ "t.test",
+                    response ~ "fisher.test")) 
+```
+
+.large[
+- Report levels for the response variable.
+- Report mean instead of median (using glue)
+- Modify the default rounding for age.
+- Specify t-test for all continuous variables and Fisher's test for response variable.
+
+
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_4.png" width=100%&gt;&lt;/p&gt;
+]
+
+???
+
+- further discuss formula notation
+    - just like {gt} can use both select helpers OR characters vector of names
+
+- discuss digits and how it's used
+
+- discuss `stat_label = `, and mention the footnote was omitted
+
+---
+# {gtsummary} tbl_summary() advanced customization
+.large[**Advanced Customization Using {gt}**
+
+- It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
+
+- Every function in {gt} is available to use with a {gtsummary} object.
+
+1. Create a {gtsummary} table.
+
+1. Convert the table to a {gt} object with the `as_gt()` function.
+
+1. Continue formatting as a {gt} table with any {gt} function.
+]
+
+???
+
+Discuss `as_gt()` and how to use
+
+
+---
+# {gtsummary} tbl_summary() advanced customization
+.large[**Advanced Customization Using {gt}**
+
+- tab_header() - add a table title
+
+- tab_spanner() - add headers that span columns
+
+- tab_options() - change table padding and font size
+
+- tab_footnote() - add additional footnotes to table
+
+And many more! https://gt.rstudio.com/
+]
+
+---
+# {gtsummary} tbl_summary() advanced customization
+
+.pull-left[
+.large[**Advanced Customization Using {gt}**]
+
+
+```r
+tbl_summary_5 &lt;- sm_trial %&gt;%
+  tbl_summary(by = trt) %&gt;%
+  # convert from gtsummary object to gt object
+* as_gt() %&gt;%
+  # modify with gt functions
+* tab_header("Table 1: Baseline Characteristics") %&gt;%
+* tab_spanner(
+*   label = "Randomization Group",
+*   columns = starts_with("stat_")
+* ) %&gt;%
+* tab_options(
+*   table.font.size = "small",
+*   data_row.padding = gt::px(1))
+```
+
+
+.footnote[More on this in the `tbl_summary()` &lt;a href="http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html#advanced-customization"&gt;vignette&lt;/a&gt;]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_summary_5.png" width=90%&gt;&lt;/p&gt;
+]
+
+---
+
+# {gtsummary} Advanced
+
+.large[
+{gtsummary} output is a list that prints as a {gt} table.
+]
+
+```r
+names(tbl_summary_1)
+```
+
+```
+##  [1] "gt_calls"     "kable_calls"  "table_body"   "table_header" "meta_data"   
+##  [6] "inputs"       "N"            "call_list"    "by"           "df_by"       
+## [11] "fmt_fun"
+```
+
+.pull-left[
+
+```r
+pluck(tbl_summary_1, "table_body") %&gt;% head()
+```
+
+```
+## # A tibble: 6 x 6
+##   variable row_type label          stat_1      stat_2      p.value
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
+## 1 age      label    Age, yrs       46 (37, 59) 48 (39, 56)   0.717
+## 2 age      missing  Unknown        7           4            NA    
+## 3 response label    Tumor Response 28 (29%)    33 (34%)      0.637
+## 4 response missing  Unknown        3           4            NA    
+## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;          0.871
+## 6 grade    level    I              35 (36%)    33 (32%)     NA
+```
+]
+.pull-right[
+
+```r
+pluck(tbl_summary_1, "gt_calls") %&gt;% head(n = 4)
+```
+
+```
+## $gt
+## gt::gt(data = x$table_body)
+## 
+## $cols_align
+## gt::cols_align(align = 'center') %&gt;% gt::cols_align(align = 'left', columns = gt::vars(label))
+## 
+## $fmt_missing
+## gt::fmt_missing(columns = gt::everything(), missing_text = '')
+## 
+## $tab_style_text_indent
+## gt::tab_style(style = gt::cell_text(indent = gt::px(10), align = 'left'),locations = gt::cells_body(columns = gt::vars(label),rows = row_type != 'label'))
+```
+]
+
+???
+
+If there is time, review the structure of a {gtsummary} object
+
+Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever the object is printed.
+
+Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
+
+You can replace it with whatever you choose.
+
+&lt;!-- --- --&gt;
+&lt;!-- # Customization --&gt;
+
+&lt;!-- ### Additional customization --&gt;
+&lt;!-- - **Table footnotes** (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` ) --&gt;
+
+---
+
+class: inverse, center, middle
+# Conclusion
+
+---
+class: center
+# {gtsummary}
+.large[
+• Every function is documented further in the help file •
+
+• Check out the package website for vignettes including detailed examples and explanations •
+
+&lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; {gtsummary} documentation/website &lt;a href="http://www.danieldsjoberg.com/gtsummary/"&gt;danieldsjoberg.com/gtsummary/&lt;/a&gt;
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gtsummary} package &lt;a href="https://github.com/ddsjoberg/gtsummary"&gt;github.com/ddsjoberg/gtsummary&lt;/a&gt;
+
+&lt;img src = "images/slide_show_icon.png" width="2.4%" height="2.4%"&gt; slides at &lt;a href="https://github.com/margarethannum/gtsummary-presentation-rladies"&gt;github.com/margarethannum/gtsummary-presentation-rladies&lt;/a&gt;  
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; source code for slides at &lt;a href="https://github.com/margarethannum/gtsummary-presentation-rladies"&gt;github.com/margarethannum/gtsummary-presentation-rladies&lt;/a&gt;
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
+]
+
+???
+
+Go star {gtsummary} on GitHub...we're already to 50+!
+
+
+---
+# Download {gtsummary} today!
+
+
+
+---
+# Thank you
+
+Author/Maintainer: Daniel Sjoberg
+
+Authors: Margie Hannum, Karissa Whiting, Emily Zabor, Michael Curry
+
+Contributors: Esther Drill, Jessica Flynn
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

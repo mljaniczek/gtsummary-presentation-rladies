@@ -1,0 +1,70 @@
+class: inverse, center, middle
+# Conclusion
+
+---
+class: center
+# {gtsummary}
+.large[
+• Every function is documented further in the help file •
+
+• Check out the package website for vignettes including detailed examples and explanations •
+
+<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {gtsummary} documentation/website <a href="http://www.danieldsjoberg.com/gtsummary/">danieldsjoberg.com/gtsummary/</a>
+
+<img src = "images/github_icon.png" width="2.4%" height="2.4%"> {gtsummary} package <a href="https://github.com/ddsjoberg/gtsummary">github.com/ddsjoberg/gtsummary</a>
+
+<img src = "images/slide_show_icon.png" width="2.4%" height="2.4%"> slides at <a href="https://github.com/margarethannum/gtsummary-presentation-rladies">github.com/margarethannum/gtsummary-presentation-rladies</a>  
+
+<img src = "images/github_icon.png" width="2.4%" height="2.4%"> source code for slides at <a href="https://github.com/margarethannum/gtsummary-presentation-rladies">github.com/margarethannum/gtsummary-presentation-rladies</a>
+
+<img src = "images/github_icon.png" width="2.4%" height="2.4%"> {gt} package <a href="https://github.com/rstudio/gt">github.com/rstudio/gt</a>
+]
+
+???
+
+Go star {gtsummary} on GitHub...we're already to 50+!
+
+
+---
+# Download {gtsummary} today!
+
+```{r include = FALSE, echo=FALSE, eval=FALSE}
+dl <- cranlogs::cran_downloads(packages = "gtsummary", from = "2019-05-01", to = "last-day")
+
+library(lubridate)
+library(scales)
+
+dlmonth <- dl %>% 
+  group_by(month = floor_date(date, "month")) %>% 
+  summarize(amount = sum(count)) %>% 
+  filter(month != "2020-02-01")
+
+p <- ggplot(dlmonth, aes(x = month, y = amount)) +
+  geom_line() + 
+  xlab("") +
+  coord_cartesian(ylim = c(0,1100)) +
+  labs(
+    title = "{gtsummary} CRAN downloads",
+    subtitle = "source: cranlogs"
+  ) +
+  ylab("Downloads/Month") +
+  # scale_x_date(
+  #   date_breaks = "1 month",
+  #   labels = date_format("%m-%Y")) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))  #+
+   # geom_vline(xintercept = as.numeric(as.Date("2019-05-01")),
+   #            linetype = 4,
+   #            color = "seagreen")
+  
+
+p
+```
+
+---
+# Thank you
+
+Author/Maintainer: Daniel Sjoberg
+
+Authors: Margie Hannum, Karissa Whiting, Emily Zabor, Michael Curry
+
+Contributors: Esther Drill, Jessica Flynn

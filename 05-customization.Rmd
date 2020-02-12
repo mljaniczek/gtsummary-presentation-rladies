@@ -152,4 +152,41 @@ tbl_summary_5 <- sm_trial %>%
 .pull-right[
 <p align="center"><img src="images/tbl_summary_5.png" width=90%></p>
 ]
+
 ---
+
+# {gtsummary} Advanced
+
+.large[
+{gtsummary} output is a list that prints as a {gt} table.
+]
+```{r}
+names(tbl_summary_1)
+```
+
+.pull-left[
+```{r}
+pluck(tbl_summary_1, "table_body") %>% head()
+```
+]
+.pull-right[
+```{r}
+pluck(tbl_summary_1, "gt_calls") %>% head(n = 4)
+```
+]
+
+???
+
+If there is time, review the structure of a {gtsummary} object
+
+Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever the object is printed.
+
+Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
+
+You can replace it with whatever you choose.
+
+<!-- --- -->
+<!-- # Customization -->
+
+<!-- ### Additional customization -->
+<!-- - **Table footnotes** (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` ) -->
