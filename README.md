@@ -1,3 +1,3 @@
 ## gtsummary presentation for Rladies
 
-Slides for the presentation can be viewed [here](https://github.com/margarethannum/gtsummary-presentation-rladies).
+Slides for the presentation can be viewed [here](https://margarethannum.github.io/gtsummary-presentation-rladies).
