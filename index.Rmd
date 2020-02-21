@@ -28,6 +28,32 @@ set.seed(78987)
 theme_set(mskRvis::theme_biostat())
 
 ```
+class: center
+background-image: url(images/nejm_demographic_stander.jpg)
+background-size: contain
+
+
+
+# Motivation
+
+.pull-right[
+.footnote[From <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316">Stander et. al, *NEJM* (February 2020)</a>]
+]
+]
+
+???
+
+-Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
+
+-Other packages out there to create similar tables are opinionated without being very customizable
+
+-What if a collaborator wants 2 decimal places? 3? Mean (Range) for some variables and Median (IQR) for others? Bolding significant p-values? 
+A special kind of confidence interval formula instead of the default?
+
+- Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
+
+
+---
 
 
 class: center
