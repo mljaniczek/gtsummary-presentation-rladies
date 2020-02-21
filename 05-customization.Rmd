@@ -95,11 +95,11 @@ tbl_summary_4 <- sm_trial %>%
 
 - Every function in {gt} is available to use with a {gtsummary} object.
 
-1. Create a {gtsummary} table.
+    1. Create a {gtsummary} table.
 
-1. Convert the table to a {gt} object with the `as_gt()` function.
+    1. Convert the table to a {gt} object with the `as_gt()` function.
 
-1. Continue formatting as a {gt} table with any {gt} function.
+    1. Continue formatting as a {gt} table with any {gt} function.
 ]
 
 ???

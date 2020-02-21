@@ -24,46 +24,26 @@ class: center, middle, inverse, title-slide
 
 
 
-class: center
-background-image: url(images/nejm_demographic_stander.jpg)
-background-size: contain
-
-
 
 # Motivation
 
+.pull-left[
+.large[
+- Create reproducible, customizable summary and analytic tables that are ready to present.
+]
+
+.footnote[Table from &lt;a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316"&gt;Stander et. al, *NEJM* (February 2020)&lt;/a&gt;]
+]
+
 .pull-right[
-.footnote[From &lt;a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316"&gt;Stander et. al, *NEJM* (February 2020)&lt;/a&gt;]
+&lt;img src="images/nejm_demographic_stander.jpg" width=70%&gt;
 ]
-]
-
-???
-
--Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
-
--Other packages out there to create similar tables are opinionated without being very customizable
-
--What if a collaborator wants 2 decimal places? 3? Mean (Range) for some variables and Median (IQR) for others? Bolding significant p-values? 
-A special kind of confidence interval formula instead of the default?
-
-- Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
-
-
----
-
-
-class: center
-background-image: url(images/gtsummary_logo.png)
-background-size: contain
-
-
-
-# {gtsummary} package
-
-
 
 
 ???
+- In our department we make table 1 and summarize regression models all the time. We all had our own siloed way to do this, some people had personal packages and some people just had scripts to do what they wanted. 
+
+- As a department we wanted a unified way to make these tables, nothing out there did exactly what we wanted, with the level of customizability that we wanted. 
 
 -Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
 
@@ -80,47 +60,23 @@ A special kind of confidence interval formula instead of the default?
 # {gtsummary} Overview
 
 .large[
+.pull-left[
 * Package will create your tabular summaries, with sensible defaults that are highly customizable
   - Summarize data frames/tibbles
   - Summarize regression models
   - Customize tables
   - Report statistics from {gtsummary} tables inline in R Markdown
+
+* Leverages {broom}, {labelled}, {tidyselect}, and {gt} packages to get the job done! 
+]
+]
+
+.pull-right[
+&lt;img src="images/gtsummary_logo.png" width=100%&gt;
 ]
 
 ---
-# {gtsummary} v1.2.5 - Package Website
 
-.large[
-* Package Website: http://www.danieldsjoberg.com/gtsummary/
-
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
-  
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
-  
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
-  
-* Install {gtsummary} with the following code: 
-]
-
-
-```r
-install.packages("gtsummary")          
-```
-
-.large[
-* Also recommended to install the development version of {gt} from GitHub.
-]
-
-```r
-install.packages("remotes")
-remotes::install_github("rstudio/gt")        
-```
-
-
-
-???
-- visit the website and give quick tour
----
 
 # {gt} - an aside
 
@@ -129,6 +85,8 @@ remotes::install_github("rstudio/gt")
 * New package from RStudio
 
 * Package for printing highly customized tables
+
+* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
 
 * Goal is to unify code for creating tables in HTML, Word (via RTF), and PDF
 
@@ -145,18 +103,13 @@ remotes::install_github("rstudio/gt")
 -When Dan started developing gtsummary last year it was originally designed for our tables to be printed using knitr::kable(). But mid-last-year Rich Iannone from RStudio started developing a table construction package called {gt}, and even though it’s still in development (and not on CRAN), since it’s from the RStudio world we anticipate it will have full support and eventually be widely adopted, so he switched our package to take full advantage of the functionality {gt} offers. Still can use our package and print with kable, more on that later.
 
 ---
+
+
 # {gt} - an aside
-.pull-left[
-* "We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
 
-* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
+&lt;img src="images/gt_parts_of_a_table.png" width=70%&gt;
 
-]
-.pull-right[
-&lt;img src="images/gt_parts_of_a_table.png" width=110%&gt;
-]
-
-Image source: https://gt.rstudio.com/
+.pull-left[.footnote[Image source: https://gt.rstudio.com/]]
 
 ???
 the gt documentation is great!
@@ -232,8 +185,8 @@ all functions grouped by the part of a table they modify
 * For simplicity in this presentation, subset data to a few variables of interest:
 
 ```r
-sm_trial &lt;- trial %&gt;% 
-  select(trt, age, response, grade)
+*sm_trial &lt;- trial %&gt;%
+* select(trt, age, response, grade)
 ```
 ]
 ]
@@ -248,10 +201,64 @@ class: inverse, center, middle
 
 ---
 # {gtsummary} summarize data with tbl_summary()
-.pull-left[
-.large[**Example: Summarizing clinical trial data**]
 
-Produce a table of descriptive statistics using one line of code:
+.pull-left[
+.large[
+**Raw data summary**
+
+⚠ Difficult to work with
+
+⚠ Need to convert character to factor variables
+
+⚠ Dichotomous variables coded 0/1 are treated as numeric for descriptive statistics
+
+⚠ Takes a lot of work to get this into a presentable table! 
+]
+]
+
+.pull-right[
+
+```r
+head(sm_trial, 3)
+```
+
+```
+## # A tibble: 3 x 4
+##   trt      age response grade
+##   &lt;chr&gt;  &lt;dbl&gt;    &lt;int&gt; &lt;fct&gt;
+## 1 Drug A    23        0 II   
+## 2 Drug B     9        1 I    
+## 3 Drug A    31        0 II
+```
+
+```r
+*summary(sm_trial)
+```
+
+```
+##      trt                 age           response      grade   
+##  Length:200         Min.   : 6.00   Min.   :0.0000   I  :68  
+##  Class :character   1st Qu.:38.00   1st Qu.:0.0000   II :68  
+##  Mode  :character   Median :47.00   Median :0.0000   III:64  
+##                     Mean   :47.24   Mean   :0.3161           
+##                     3rd Qu.:57.00   3rd Qu.:1.0000           
+##                     Max.   :83.00   Max.   :1.0000           
+##                     NA's   :11      NA's   :7
+```
+]
+
+
+???
+
+- it's not pretty
+
+- most often I want the odds ratios from a logistic regression, not the betas
+
+- format from every type of model is different and difficult to work with
+---
+# {gtsummary} summarize data with tbl_summary()
+.pull-left[
+.large[**Example: Summarizing clinical trial data in one line of code with `tbl_summary()`**]
 
 
 ```r
@@ -259,13 +266,12 @@ Produce a table of descriptive statistics using one line of code:
 ```
 
 
-Notice some nice default behaviors:
-- Detects variable types of input data and calculates descriptive statistics
-  - Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data.
-- By default, variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.
-- Recognizes `NA` values as "missing" and lists them as unknown
-- Label attributes automatically printed
-- Variable levels indented and footnotes added _({gt})_
+Notice some nice default behaviors:  
+  ♥ Detects variable types of input data and calculates descriptive statistics  
+  ♥ Variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.  
+  ♥ Recognizes `NA` values as "missing" and lists them as unknown  
+  ♥ Label attributes automatically printed  
+  ♥ Variable levels indented and footnotes added with _({gt})_  
 
 ]
 .pull-right[
@@ -286,7 +292,8 @@ Notice some nice default behaviors:
 ```r
 tbl_summary_1 &lt;- sm_trial %&gt;%
 * tbl_summary(by = trt) %&gt;%
-* add_p()
+* add_p() %&gt;%
+* add_overall()
 ```
 
 .medium[
@@ -336,10 +343,10 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
   tbl_summary(
     by = trt,
     statistic = list(
-*     all_continuous() ~ "{mean} ({sd})",
-*     all_categorical() ~ "{n} / {N} ({p}%)"),
-*   label = vars(age) ~ "Patient Age") %&gt;%
-* add_p(test = all_continuous() ~ "t.test")
+      all_continuous() ~ "{mean} ({sd})", 
+      all_categorical() ~ "{n} / {N} ({p}%)"),
+    label = vars(age) ~ "Patient Age") %&gt;%
+  add_p(test = all_continuous() ~ "t.test")
 ```
 
 
@@ -370,25 +377,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 
 ---
 
-# {gtsummary} tbl_summary() Formulas
-.large[
-**Formulas**
 
-
-- Most arguments to `tbl_summary()` require formula syntax, and provide many more options to easily select the table variables you want to modify. More on that later.
-&lt;br&gt;
-&lt;br&gt;
-
-.center[
-
-**select variables ~ specify what you want to do** 
-]
-]
-
-???
-- case_when uses similar syntax 
-
----
 # {gtsummary} summarize data with tbl_summary()
 
 .large[
@@ -475,11 +464,13 @@ m1 &lt;- glm(response ~ trt + grade + age,
 .pull-left[
 .large[
 
-**`broom::tidy() output**
+**`broom::tidy()` output**
 
 ♥ Using `broom::tidy()` a step in the right direction!
 
 ♥ All models returned with consistent table format (term, estimates, standard errors...)
+
+♥ Option to exponentiate
 
 ⚠ Does not include reference groups
 
@@ -525,7 +516,7 @@ m1 &lt;- glm(response ~ trt + grade + age,
   ♥ Reference groups added to the table  
   ♥ Sensible default number rounding and formatting  
   ♥ Label attributes printed  
-  ♥ Certain model types detected
+  ♥ Certain model types detected  
   ♥ Estimate header and footnote included 
 
 ]
@@ -654,9 +645,9 @@ tbl_uvregression_1 &lt;-
 ```
 
 .large[
-- Table of univariate regression models.
-
-- Specify the outcome, and the remaining variables in data frame serve as predictors.
+- Table of univariate regression models
+- Specify the outcome, and the remaining variables in data frame serve as predictors
+- Customize table similar to `tbl_regression()`
 ]
 ]
 .pull-right[
@@ -684,11 +675,11 @@ class: inverse, center, middle
 
 
 ```r
-inline_text(tbl_reg_1, variable = "trt", level = "Drug A")
+inline_text(tbl_reg_1, variable = "trt", level = "Drug B")
 ```
 
 ```
-NA (95% CI NA, NA; NA)
+1.13 (95% CI 0.60, 2.13; p=0.7)
 ```
 
 - The pattern of what is reported can be modified with the `pattern = ` argument.  
@@ -806,11 +797,11 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 
 - Every function in {gt} is available to use with a {gtsummary} object.
 
-1. Create a {gtsummary} table.
+    1. Create a {gtsummary} table.
 
-1. Convert the table to a {gt} object with the `as_gt()` function.
+    1. Convert the table to a {gt} object with the `as_gt()` function.
 
-1. Continue formatting as a {gt} table with any {gt} function.
+    1. Continue formatting as a {gt} table with any {gt} function.
 ]
 
 ???
@@ -876,9 +867,9 @@ names(tbl_summary_1)
 ```
 
 ```
-##  [1] "gt_calls"     "kable_calls"  "table_body"   "table_header"
-##  [5] "meta_data"    "inputs"       "N"            "call_list"   
-##  [9] "by"           "df_by"        "fmt_fun"
+##  [1] "gt_calls"     "kable_calls"  "table_body"   "table_header" "meta_data"   
+##  [6] "inputs"       "N"            "call_list"    "by"           "df_by"       
+## [11] "fmt_fun"
 ```
 
 .pull-left[
@@ -888,15 +879,15 @@ pluck(tbl_summary_1, "table_body") %&gt;% head()
 ```
 
 ```
-## # A tibble: 6 x 6
-##   variable row_type label          stat_1      stat_2      p.value
-##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
-## 1 age      label    Age, yrs       46 (37, 59) 48 (39, 56)   0.717
-## 2 age      missing  Unknown        7           4            NA    
-## 3 response label    Tumor Response 28 (29%)    33 (34%)      0.637
-## 4 response missing  Unknown        3           4            NA    
-## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;          0.871
-## 6 grade    level    I              35 (36%)    33 (32%)     NA
+## # A tibble: 6 x 7
+##   variable row_type label          stat_0      stat_1      stat_2      p.value
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
+## 1 age      label    Age, yrs       47 (38, 57) 46 (37, 59) 48 (39, 56)   0.717
+## 2 age      missing  Unknown        11          7           4            NA    
+## 3 response label    Tumor Response 61 (32%)    28 (29%)    33 (34%)      0.637
+## 4 response missing  Unknown        7           3           4            NA    
+## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;          0.871
+## 6 grade    level    I              68 (34%)    35 (36%)    33 (32%)     NA
 ```
 ]
 .pull-right[
@@ -939,9 +930,45 @@ You can replace it with whatever you choose.
 ---
 
 class: inverse, center, middle
+
 # Conclusion
 
 ---
+
+# {gtsummary} v1.2.6 - Package Website
+
+.large[
+* Package Website: http://www.danieldsjoberg.com/gtsummary/
+
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
+  
+* Install {gtsummary} from CRAN with the following code: 
+]
+
+
+```r
+install.packages("gtsummary")          
+```
+
+.large[
+* Also recommended to install the development version of {gt} from GitHub.
+]
+
+```r
+install.packages("remotes")
+remotes::install_github("rstudio/gt")        
+```
+
+
+
+???
+- visit the website and give quick tour
+---
+
 class: center
 # {gtsummary}
 .large[
@@ -966,18 +993,20 @@ Go star {gtsummary} on GitHub...we're already to 50+!
 
 
 ---
-# Download {gtsummary} today!
+# Questions?
 
 
 
 ---
 # Thank you
 
-Author/Maintainer: Daniel Sjoberg
+.large[
+Author/Maintainer: **Daniel Sjoberg** (Many slides &amp; materials taken from his presentation!)
 
 Authors: Margie Hannum, Karissa Whiting, Emily Zabor, Michael Curry
 
 Contributors: Esther Drill, Jessica Flynn
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

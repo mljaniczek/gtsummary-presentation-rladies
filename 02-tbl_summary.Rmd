@@ -5,10 +5,40 @@ class: inverse, center, middle
 
 ---
 # {gtsummary} summarize data with tbl_summary()
-.pull-left[
-.large[**Example: Summarizing clinical trial data**]
 
-Produce a table of descriptive statistics using one line of code:
+.pull-left[
+.large[
+**Raw data summary**
+
+⚠ Difficult to work with
+
+⚠ Need to convert character to factor variables
+
+⚠ Dichotomous variables coded 0/1 are treated as numeric for descriptive statistics
+
+⚠ Takes a lot of work to get this into a presentable table! 
+]
+]
+
+.pull-right[
+```{r}
+head(sm_trial, 3)
+summary(sm_trial) #<<
+```
+]
+
+
+???
+
+- it's not pretty
+
+- most often I want the odds ratios from a logistic regression, not the betas
+
+- format from every type of model is different and difficult to work with
+---
+# {gtsummary} summarize data with tbl_summary()
+.pull-left[
+.large[**Example: Summarizing clinical trial data in one line of code with `tbl_summary()`**]
 
 ```{r, results = FALSE}
 tbl_summary(sm_trial) #<<
@@ -18,13 +48,12 @@ tbl_summary(sm_trial) #<<
 # gtsave(tbl_summ_1a %>% as_gt(), filename = "images/tbl_summary_1a.png")
 ```
 
-Notice some nice default behaviors:
-- Detects variable types of input data and calculates descriptive statistics
-  - Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data.
-- By default, variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.
-- Recognizes `NA` values as "missing" and lists them as unknown
-- Label attributes automatically printed
-- Variable levels indented and footnotes added _({gt})_
+Notice some nice default behaviors:  
+  ♥ Detects variable types of input data and calculates descriptive statistics  
+  ♥ Variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.  
+  ♥ Recognizes `NA` values as "missing" and lists them as unknown  
+  ♥ Label attributes automatically printed  
+  ♥ Variable levels indented and footnotes added with _({gt})_  
 
 ]
 .pull-right[
@@ -44,11 +73,12 @@ Notice some nice default behaviors:
 ```{r, results = FALSE}
 tbl_summary_1 <- sm_trial %>%
   tbl_summary(by = trt) %>% #<<
-  add_p() #<<
+  add_p() %>% #<<
+  add_overall() #<<
 
 ```
 ```{r, include=FALSE}
-# gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")
+# gtsave(tbl_summary_1 %>% as_gt(), filename = "images/tbl_summary_2.png")
 ```
 .medium[
 - `by =` argument to split table by a categorical variable
@@ -96,10 +126,11 @@ tbl_summary_3 <- sm_trial %>%
   tbl_summary(
     by = trt,
     statistic = list(
-      all_continuous() ~ "{mean} ({sd})", #<<
-      all_categorical() ~ "{n} / {N} ({p}%)"), #<<
-    label = vars(age) ~ "Patient Age") %>% #<<
-  add_p(test = all_continuous() ~ "t.test") #<<
+      all_continuous() ~ "{mean} ({sd})", 
+      all_categorical() ~ "{n} / {N} ({p}%)"),
+    label = vars(age) ~ "Patient Age") %>%
+  add_p(test = all_continuous() ~ "t.test")
+
 ```
 ```{r, include=FALSE}
 # gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")
@@ -132,25 +163,7 @@ tbl_summary_3 <- sm_trial %>%
 
 ---
 
-# {gtsummary} tbl_summary() Formulas
-.large[
-**Formulas**
 
-
-- Most arguments to `tbl_summary()` require formula syntax, and provide many more options to easily select the table variables you want to modify. More on that later.
-<br>
-<br>
-
-.center[
-
-**select variables ~ specify what you want to do** 
-]
-]
-
-???
-- case_when uses similar syntax 
-
----
 # {gtsummary} summarize data with tbl_summary()
 
 .large[

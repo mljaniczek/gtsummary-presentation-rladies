@@ -28,46 +28,26 @@ set.seed(78987)
 theme_set(mskRvis::theme_biostat())
 
 ```
-class: center
-background-image: url(images/nejm_demographic_stander.jpg)
-background-size: contain
-
-
 
 # Motivation
 
+.pull-left[
+.large[
+- Create reproducible, customizable summary and analytic tables that are ready to present.
+]
+
+.footnote[Table from <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316">Stander et. al, *NEJM* (February 2020)</a>]
+]
+
 .pull-right[
-.footnote[From <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316">Stander et. al, *NEJM* (February 2020)</a>]
+<img src="images/nejm_demographic_stander.jpg" width=70%>
 ]
-]
-
-???
-
--Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
-
--Other packages out there to create similar tables are opinionated without being very customizable
-
--What if a collaborator wants 2 decimal places? 3? Mean (Range) for some variables and Median (IQR) for others? Bolding significant p-values? 
-A special kind of confidence interval formula instead of the default?
-
-- Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
-
-
----
-
-
-class: center
-background-image: url(images/gtsummary_logo.png)
-background-size: contain
-
-
-
-# {gtsummary} package
-
-
 
 
 ???
+- In our department we make table 1 and summarize regression models all the time. We all had our own siloed way to do this, some people had personal packages and some people just had scripts to do what they wanted. 
+
+- As a department we wanted a unified way to make these tables, nothing out there did exactly what we wanted, with the level of customizability that we wanted. 
 
 -Create reproducible summary and analytic tables that are ready to present. Create demographic tables, summarize regression models, and report analysis results. 
 
@@ -84,45 +64,23 @@ A special kind of confidence interval formula instead of the default?
 # {gtsummary} Overview
 
 .large[
+.pull-left[
 * Package will create your tabular summaries, with sensible defaults that are highly customizable
   - Summarize data frames/tibbles
   - Summarize regression models
   - Customize tables
   - Report statistics from {gtsummary} tables inline in R Markdown
+
+* Leverages {broom}, {labelled}, {tidyselect}, and {gt} packages to get the job done! 
+]
+]
+
+.pull-right[
+<img src="images/gtsummary_logo.png" width=100%>
 ]
 
 ---
-# {gtsummary} v1.2.5 - Package Website
 
-.large[
-* Package Website: http://www.danieldsjoberg.com/gtsummary/
-
-  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Installation instructions
-  
-  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Thorough documentation on every function
-  
-  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Detailed tutorials 
-  
-* Install {gtsummary} with the following code: 
-]
-
-``` {r, eval=FALSE}
-install.packages("gtsummary")          
-```
-
-.large[
-* Also recommended to install the development version of {gt} from GitHub.
-]
-``` {r, eval=FALSE}
-install.packages("remotes")
-remotes::install_github("rstudio/gt")        
-```
-
-
-
-???
-- visit the website and give quick tour
----
 
 # {gt} - an aside
 
@@ -131,6 +89,8 @@ remotes::install_github("rstudio/gt")
 * New package from RStudio
 
 * Package for printing highly customized tables
+
+* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
 
 * Goal is to unify code for creating tables in HTML, Word (via RTF), and PDF
 
@@ -147,18 +107,13 @@ remotes::install_github("rstudio/gt")
 -When Dan started developing gtsummary last year it was originally designed for our tables to be printed using knitr::kable(). But mid-last-year Rich Iannone from RStudio started developing a table construction package called {gt}, and even though it’s still in development (and not on CRAN), since it’s from the RStudio world we anticipate it will have full support and eventually be widely adopted, so he switched our package to take full advantage of the functionality {gt} offers. Still can use our package and print with kable, more on that later.
 
 ---
+
+
 # {gt} - an aside
-.pull-left[
-* "We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
 
-* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
+<img src="images/gt_parts_of_a_table.png" width=70%>
 
-]
-.pull-right[
-<img src="images/gt_parts_of_a_table.png" width=110%>
-]
-
-Image source: https://gt.rstudio.com/
+.pull-left[.footnote[Image source: https://gt.rstudio.com/]]
 
 ???
 the gt documentation is great!
@@ -223,8 +178,8 @@ head(trial, 3) #<<
 
 * For simplicity in this presentation, subset data to a few variables of interest:
 ```{r, results = FALSE}
-sm_trial <- trial %>% 
-  select(trt, age, response, grade)
+sm_trial <- trial %>% #<<
+  select(trt, age, response, grade) #<<
 ```
 ]
 ]

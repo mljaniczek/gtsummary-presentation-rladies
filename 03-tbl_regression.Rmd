@@ -41,11 +41,13 @@ m1 #<<
 .pull-left[
 .large[
 
-**`broom::tidy() output**
+**`broom::tidy()` output**
 
 ♥ Using `broom::tidy()` a step in the right direction!
 
 ♥ All models returned with consistent table format (term, estimates, standard errors...)
+
+♥ Option to exponentiate
 
 ⚠ Does not include reference groups
 
@@ -79,7 +81,7 @@ broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
   ♥ Reference groups added to the table  
   ♥ Sensible default number rounding and formatting  
   ♥ Label attributes printed  
-  ♥ Certain model types detected
+  ♥ Certain model types detected  
   ♥ Estimate header and footnote included 
 
 ]
@@ -213,9 +215,9 @@ tbl_uvregression_1 <-
 # gtsave(tbl_uvregression_1 %>% as_gt(), filename = "images/tbl_uvregression_1.png")
 ```
 .large[
-- Table of univariate regression models.
-
-- Specify the outcome, and the remaining variables in data frame serve as predictors.
+- Table of univariate regression models
+- Specify the outcome, and the remaining variables in data frame serve as predictors
+- Customize table similar to `tbl_regression()`
 ]
 ]
 .pull-right[
@@ -242,7 +244,7 @@ class: inverse, center, middle
 - Any statistic reported in a {gtsummary} table can be extracted and reported in-line in a R Markdown document with the `inline_text()` function.
 
 ```{r, comment=""}
-inline_text(tbl_reg_1, variable = "trt", level = "Drug A")
+inline_text(tbl_reg_1, variable = "trt", level = "Drug B")
 ```
 
 - The pattern of what is reported can be modified with the `pattern = ` argument.  

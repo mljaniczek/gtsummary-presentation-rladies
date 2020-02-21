@@ -1,7 +1,41 @@
 class: inverse, center, middle
+
 # Conclusion
 
 ---
+
+# {gtsummary} v1.2.6 - Package Website
+
+.large[
+* Package Website: http://www.danieldsjoberg.com/gtsummary/
+
+  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Installation instructions
+  
+  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Thorough documentation on every function
+  
+  * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Detailed tutorials 
+  
+* Install {gtsummary} from CRAN with the following code: 
+]
+
+``` {r, eval=FALSE}
+install.packages("gtsummary")          
+```
+
+.large[
+* Also recommended to install the development version of {gt} from GitHub.
+]
+``` {r, eval=FALSE}
+install.packages("remotes")
+remotes::install_github("rstudio/gt")        
+```
+
+
+
+???
+- visit the website and give quick tour
+---
+
 class: center
 # {gtsummary}
 .large[
@@ -26,7 +60,7 @@ Go star {gtsummary} on GitHub...we're already to 50+!
 
 
 ---
-# Download {gtsummary} today!
+# Questions?
 
 ```{r include = FALSE, echo=FALSE, eval=FALSE}
 dl <- cranlogs::cran_downloads(packages = "gtsummary", from = "2019-05-01", to = "last-day")
@@ -63,8 +97,10 @@ p
 ---
 # Thank you
 
-Author/Maintainer: Daniel Sjoberg
+.large[
+Author/Maintainer: **Daniel Sjoberg** (Many slides & materials taken from his presentation!)
 
 Authors: Margie Hannum, Karissa Whiting, Emily Zabor, Michael Curry
 
 Contributors: Esther Drill, Jessica Flynn
+]
