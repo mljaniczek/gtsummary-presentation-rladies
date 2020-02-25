@@ -128,7 +128,7 @@ tbl_summary_3 <- sm_trial %>%
     statistic = list(
       all_continuous() ~ "{mean} ({sd})", 
       all_categorical() ~ "{n} / {N} ({p}%)"),
-    label = vars(age) ~ "Patient Age") %>%
+    label = age ~ "Patient Age") %>%
   add_p(test = all_continuous() ~ "t.test")
 
 ```
@@ -166,6 +166,10 @@ tbl_summary_3 <- sm_trial %>%
 
 # {gtsummary} summarize data with tbl_summary()
 
+
+<img src = "images/tbl_summary_demo.gif" alt = "animated" width = "100%">
+
+???
 .large[
 **Additional `tbl_summary` Features**
 ]
@@ -173,6 +177,7 @@ tbl_summary_3 <- sm_trial %>%
 .medium[
 - Use **{tidyselect}** functions to select variables for customization
 - Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
+- **Formatting** functions to bold and italicize labels and levels
 - **Missing data** options
 - **Sort variables** by significance (`sort_p()`); sort categorical variables by frequency  
 - Calculate **cell percents and row percents** (default is column-wide)  

@@ -7,6 +7,7 @@ output:
   xaringan::moon_reader:
     css: [ninjutsu, default, metropolis, metropolis-fonts, "my-theme.css"]
     lib_dir: libs
+    seal: false
     nature:
       ratio: 16:9
       highlightStyle: github
@@ -29,6 +30,27 @@ theme_set(mskRvis::theme_biostat())
 
 ```
 
+class: inverse, left, middle
+
+# **gtsummary**: Creating publication-ready analytical tables
+
+.large[
+.pull-left[
+**Margie Hannum**
+
+Memorial Sloan Kettering Cancer Center
+
+RLadies NYC, February 26, 2020
+
+.footnote[Twitter: @Margaret-Hannum  Github: @margarethannum ]
+]
+]
+
+
+ 
+
+---
+
 # Motivation
 
 .pull-left[
@@ -36,11 +58,11 @@ theme_set(mskRvis::theme_biostat())
 - Create reproducible, customizable summary and analytic tables that are ready to present.
 ]
 
-.footnote[Table from <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316">Stander et. al, *NEJM* (February 2020)</a>]
+.footnote[Table from <a href="https://www.nature.com/articles/leu201796">Howard et. al, *Leukemia* (November 2017)</a>]
 ]
 
 .pull-right[
-<img src="images/nejm_demographic_stander.jpg" width=70%>
+<img src="images/nature_baseline_char_howard.jpg" width=100%>
 ]
 
 
@@ -71,7 +93,9 @@ A special kind of confidence interval formula instead of the default?
   - Customize tables
   - Report statistics from {gtsummary} tables inline in R Markdown
 
-* Leverages {broom}, {labelled}, {tidyselect}, and {gt} packages to get the job done! 
+* Leverages {broom}, {labelled}, {tidyselect}, and {gt} packages to get the job done!
+
+* CRAN version 1.2.6 released 2020-02-13
 ]
 ]
 
@@ -90,7 +114,6 @@ A special kind of confidence interval formula instead of the default?
 
 * Package for printing highly customized tables
 
-* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
 
 * Goal is to unify code for creating tables in HTML, Word (via RTF), and PDF
 
@@ -121,6 +144,18 @@ the gt documentation is great!
 all functions grouped by the part of a table they modify
 
 ---
+# {gt} - an aside
+
+
+
+<img src="images/gt_workflow_diagram.png" width=100%>
+
+.pull-left[.footnote[Image source: https://gt.rstudio.com/]]
+
+???
+* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer).
+
+---
 # {gtsummary} Print Engines - gt or kable?
 .large[
 .pull-left[
@@ -128,11 +163,11 @@ all functions grouped by the part of a table they modify
 
 ♥ Highly Customizable 
 
-♥ All output includes informative footnotes
+♥ All output includes informative footnotes, indents levels
 
 ♥ HTML Output
 
-♥ PDF Output
+⚠ PDF Output still in dev
 
 ⚠ MS Word Output via RTF still in dev, requires re-sizing of tables by hand
 ]
@@ -142,7 +177,7 @@ all functions grouped by the part of a table they modify
 
 ⚠ Less Customizable 
 
-⚠ Footnotes and spanning headers stripped from all output
+⚠ Footnotes and spanning headers stripped from all output. No indents.
 
 ♥ HTML Output
 
@@ -154,6 +189,8 @@ all functions grouped by the part of a table they modify
 **We built {gtsummary} as a companion to {gt} and highly recommend it!** 
 
 ]
+
+???
 .footnote[All examples shown use {gt} print engine]
 
 ---

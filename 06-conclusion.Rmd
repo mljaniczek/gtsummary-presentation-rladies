@@ -3,8 +3,13 @@ class: inverse, center, middle
 # Conclusion
 
 ---
+# {gtsummary} - Package Website
 
-# {gtsummary} v1.2.6 - Package Website
+<iframe src="http://www.danieldsjoberg.com/gtsummary/" scrolling= "yes" width = "95%" height = 95%"></iframe>
+
+---
+
+# {gtsummary} Package Website & Installation
 
 .large[
 * Package Website: http://www.danieldsjoberg.com/gtsummary/
@@ -34,14 +39,14 @@ remotes::install_github("rstudio/gt")
 
 ???
 - visit the website and give quick tour
+r include_url("http://www.danieldsjoberg.com/gtsummary/", height = "400px")
+
 ---
 
 class: center
-# {gtsummary}
+# {gtsummary} other resouces
 .large[
-• Every function is documented further in the help file •
 
-• Check out the package website for vignettes including detailed examples and explanations •
 
 <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {gtsummary} documentation/website <a href="http://www.danieldsjoberg.com/gtsummary/">danieldsjoberg.com/gtsummary/</a>
 
@@ -54,34 +59,32 @@ class: center
 <img src = "images/github_icon.png" width="2.4%" height="2.4%"> {gt} package <a href="https://github.com/rstudio/gt">github.com/rstudio/gt</a>
 ]
 
-???
-
-Go star {gtsummary} on GitHub...we're already to 50+!
-
-
----
-# Questions?
+Slides created using [xaringan](https://github.com/yihui/xaringan)
 
 ```{r include = FALSE, echo=FALSE, eval=FALSE}
-dl <- cranlogs::cran_downloads(packages = "gtsummary", from = "2019-05-01", to = "last-day")
-
 library(lubridate)
 library(scales)
+library(tidyverse)
+theme_set(mskRvis::theme_biostat())
+
+dl <- cranlogs::cran_downloads(packages = "gtsummary", from = "2019-05-01", to = "last-day")
+
 
 dlmonth <- dl %>% 
   group_by(month = floor_date(date, "month")) %>% 
   summarize(amount = sum(count)) %>% 
-  filter(month != "2020-02-01")
+  filter(month != "2020-03-01")
 
 p <- ggplot(dlmonth, aes(x = month, y = amount)) +
   geom_line() + 
   xlab("") +
-  coord_cartesian(ylim = c(0,1100)) +
+  coord_cartesian(ylim = c(0,1700)) +
   labs(
     title = "{gtsummary} CRAN downloads",
     subtitle = "source: cranlogs"
   ) +
   ylab("Downloads/Month") +
+  xlab("Months since first CRAN release (May 2019)") +
   # scale_x_date(
   #   date_breaks = "1 month",
   #   labels = date_format("%m-%Y")) +
@@ -94,13 +97,66 @@ p <- ggplot(dlmonth, aes(x = month, y = amount)) +
 p
 ```
 
+
+???
+
+Go star {gtsummary} on GitHub...we're already to 50+!
+
+
 ---
-# Thank you
+# Thank you! Questions?
+
+.medium[
+<img src="images/sjoberg.jpg" width=15%>
+
+Author/Maintainer: **Daniel Sjoberg**
+
+<img src="images/hannum.jpg" width=15%>
+<img src="images/whiting.jpg" width=15%>
+<img src="images/curry.jpg" width=15%>
+
+Authors: Margie Hannum, Karissa Whiting, Michael Curry, Emily Zabor (not pictured)
+
+<img src="images/drill.jpg" width=15%>
+<img src="images/flynn.jpg" width=15%>
+<img src="images/lobaugh.jpg" width=15%>
+
+Contributors: Esther Drill, Jessica Flynn, Stephanie Lobaugh
+]
+
+---
+# Appendix: {gtsummary} Advanced
 
 .large[
-Author/Maintainer: **Daniel Sjoberg** (Many slides & materials taken from his presentation!)
-
-Authors: Margie Hannum, Karissa Whiting, Emily Zabor, Michael Curry
-
-Contributors: Esther Drill, Jessica Flynn
+{gtsummary} output is a list that prints as a {gt} table.
 ]
+```{r}
+names(tbl_summary_1)
+```
+
+.pull-left[
+```{r}
+pluck(tbl_summary_1, "table_body") %>% head()
+```
+]
+.pull-right[
+```{r}
+pluck(tbl_summary_1, "gt_calls") %>% head(n = 4)
+```
+]
+
+???
+
+If there is time, review the structure of a {gtsummary} object
+
+Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever the object is printed.
+
+Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
+
+You can replace it with whatever you choose.
+
+<!-- --- -->
+<!-- # Customization -->
+
+<!-- ### Additional customization -->
+<!-- - **Table footnotes** (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` ) -->

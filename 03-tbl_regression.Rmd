@@ -142,7 +142,7 @@ tbl_reg_1a <- tbl_regression(
 - `exponentiate` - default is `FALSE`
 - `conf.level` - Specify between 0-1. Default 0.95.
 - `estimate_fun`, `pvalue_fun` - Specify functions to round and format values
-- `tidy_fun` - Specify a specific or custom tidier
+- `tidy_fun` - Specify a specific or custom tidier (e.g. use `summary(object, type = "tidy")` from the {mice} package)
 ]
 ]
 
@@ -163,6 +163,11 @@ tbl_reg_1b <- tbl_regression(
 ---
 # {gtsummary} summarize models with tbl_regression()
 
+<img src = "images/tbl_regression_demo.gif" alt = "animated" width = "100%">
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
 .pull-left[
 ```{r, results = FALSE}
 library(survival)
@@ -173,11 +178,11 @@ tbl_reg_3 <-
 tbl_reg_4 <-
   tbl_merge( #<<
     tbls = list(tbl_reg_1, tbl_reg_3), #<<
-    tab_spanner = c("Tumor Response", "Time to Death") #<<
+    tab_spanner = c("**Tumor Response**", "**Time to Death**") #<<
   ) #<< 
 ```
 ```{r, include=FALSE}
-# gtsave(tbl_reg_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
+#gtsave(tbl_reg_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
 ```
 .large[
 - Build Cox regression model with same predictors as previous model.
@@ -244,7 +249,7 @@ class: inverse, center, middle
 - Any statistic reported in a {gtsummary} table can be extracted and reported in-line in a R Markdown document with the `inline_text()` function.
 
 ```{r, comment=""}
-inline_text(tbl_reg_1, variable = "trt", level = "Drug B")
+inline_text(tbl_reg_1, variable = trt, level = "Drug B")
 ```
 
 - The pattern of what is reported can be modified with the `pattern = ` argument.  

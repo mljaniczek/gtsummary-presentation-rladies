@@ -13,17 +13,30 @@
   </head>
   <body>
     <textarea id="source">
-class: center, middle, inverse, title-slide
 
-# gtsummary
-## Creating publication-ready analytical tables
-### Margie Hannum <br/><br/>Memorial Sloan Kettering Cancer Center<br/><br/>
-### February 26, 2020
+
+
+
+class: inverse, left, middle
+
+# **gtsummary**: Creating publication-ready analytical tables
+
+.large[
+.pull-left[
+**Margie Hannum**
+
+Memorial Sloan Kettering Cancer Center
+
+RLadies NYC, February 26, 2020
+
+.footnote[Twitter: @Margaret-Hannum  Github: @margarethannum ]
+]
+]
+
+
+ 
 
 ---
-
-
-
 
 # Motivation
 
@@ -32,11 +45,11 @@ class: center, middle, inverse, title-slide
 - Create reproducible, customizable summary and analytic tables that are ready to present.
 ]
 
-.footnote[Table from &lt;a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1908316"&gt;Stander et. al, *NEJM* (February 2020)&lt;/a&gt;]
+.footnote[Table from &lt;a href="https://www.nature.com/articles/leu201796"&gt;Howard et. al, *Leukemia* (November 2017)&lt;/a&gt;]
 ]
 
 .pull-right[
-&lt;img src="images/nejm_demographic_stander.jpg" width=70%&gt;
+&lt;img src="images/nature_baseline_char_howard.jpg" width=100%&gt;
 ]
 
 
@@ -67,7 +80,9 @@ A special kind of confidence interval formula instead of the default?
   - Customize tables
   - Report statistics from {gtsummary} tables inline in R Markdown
 
-* Leverages {broom}, {labelled}, {tidyselect}, and {gt} packages to get the job done! 
+* Leverages {broom}, {labelled}, {tidyselect}, and {gt} packages to get the job done!
+
+* CRAN version 1.2.6 released 2020-02-13
 ]
 ]
 
@@ -86,7 +101,6 @@ A special kind of confidence interval formula instead of the default?
 
 * Package for printing highly customized tables
 
-* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer). 
 
 * Goal is to unify code for creating tables in HTML, Word (via RTF), and PDF
 
@@ -117,6 +131,18 @@ the gt documentation is great!
 all functions grouped by the part of a table they modify
 
 ---
+# {gt} - an aside
+
+
+
+&lt;img src="images/gt_workflow_diagram.png" width=100%&gt;
+
+.pull-left[.footnote[Image source: https://gt.rstudio.com/]]
+
+???
+* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer).
+
+---
 # {gtsummary} Print Engines - gt or kable?
 .large[
 .pull-left[
@@ -124,11 +150,11 @@ all functions grouped by the part of a table they modify
 
 ♥ Highly Customizable 
 
-♥ All output includes informative footnotes
+♥ All output includes informative footnotes, indents levels
 
 ♥ HTML Output
 
-♥ PDF Output
+⚠ PDF Output still in dev
 
 ⚠ MS Word Output via RTF still in dev, requires re-sizing of tables by hand
 ]
@@ -138,7 +164,7 @@ all functions grouped by the part of a table they modify
 
 ⚠ Less Customizable 
 
-⚠ Footnotes and spanning headers stripped from all output
+⚠ Footnotes and spanning headers stripped from all output. No indents.
 
 ♥ HTML Output
 
@@ -150,6 +176,8 @@ all functions grouped by the part of a table they modify
 **We built {gtsummary} as a companion to {gt} and highly recommend it!** 
 
 ]
+
+???
 .footnote[All examples shown use {gt} print engine]
 
 ---
@@ -345,7 +373,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
     statistic = list(
       all_continuous() ~ "{mean} ({sd})", 
       all_categorical() ~ "{n} / {N} ({p}%)"),
-    label = vars(age) ~ "Patient Age") %&gt;%
+    label = age ~ "Patient Age") %&gt;%
   add_p(test = all_continuous() ~ "t.test")
 ```
 
@@ -380,6 +408,10 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 
 # {gtsummary} summarize data with tbl_summary()
 
+
+&lt;img src = "images/tbl_summary_demo.gif" alt = "animated" width = "100%"&gt;
+
+???
 .large[
 **Additional `tbl_summary` Features**
 ]
@@ -387,6 +419,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 .medium[
 - Use **{tidyselect}** functions to select variables for customization
 - Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
+- **Formatting** functions to bold and italicize labels and levels
 - **Missing data** options
 - **Sort variables** by significance (`sort_p()`); sort categorical variables by frequency  
 - Calculate **cell percents and row percents** (default is column-wide)  
@@ -438,8 +471,10 @@ m1 &lt;- glm(response ~ trt + grade + age,
 ##     data = trial)
 ## 
 ## Coefficients:
-## (Intercept)    trtDrug B      gradeII     gradeIII          age  
-##   -1.694687     0.124330    -0.160518     0.007672     0.019000  
+## (Intercept)    trtDrug B      gradeII     gradeIII  
+##   -1.694687     0.124330    -0.160518     0.007672  
+##         age  
+##    0.019000  
 ## 
 ## Degrees of Freedom: 182 Total (i.e. Null);  178 Residual
 ##   (17 observations deleted due to missingness)
@@ -486,13 +521,14 @@ m1 &lt;- glm(response ~ trt + grade + age,
 
 ```
 ## # A tibble: 5 x 7
-##   term        estimate std.error statistic p.value conf.low conf.high
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)    0.184    0.630    -2.69   0.00715   0.0509     0.610
-## 2 trtDrug B      1.13     0.321     0.387  0.699     0.603      2.13 
-## 3 gradeII        0.852    0.395    -0.406  0.685     0.389      1.85 
-## 4 gradeIII       1.01     0.385     0.0199 0.984     0.472      2.15 
-## 5 age            1.02     0.0114    1.67   0.0952    0.997      1.04
+##   term  estimate std.error statistic p.value conf.low
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Int~    0.184    0.630    -2.69   0.00715   0.0509
+## 2 trtD~    1.13     0.321     0.387  0.699     0.603 
+## 3 grad~    0.852    0.395    -0.406  0.685     0.389 
+## 4 grad~    1.01     0.385     0.0199 0.984     0.472 
+## 5 age      1.02     0.0114    1.67   0.0952    0.997 
+## # ... with 1 more variable: conf.high &lt;dbl&gt;
 ```
 ]
 
@@ -575,7 +611,7 @@ tbl_reg_1a &lt;- tbl_regression(
 - `exponentiate` - default is `FALSE`
 - `conf.level` - Specify between 0-1. Default 0.95.
 - `estimate_fun`, `pvalue_fun` - Specify functions to round and format values
-- `tidy_fun` - Specify a specific or custom tidier
+- `tidy_fun` - Specify a specific or custom tidier (e.g. use `summary(object, type = "tidy")` from the {mice} package)
 ]
 ]
 
@@ -595,6 +631,11 @@ tbl_reg_1b &lt;- tbl_regression(
 ---
 # {gtsummary} summarize models with tbl_regression()
 
+&lt;img src = "images/tbl_regression_demo.gif" alt = "animated" width = "100%"&gt;
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
 .pull-left[
 
 ```r
@@ -606,7 +647,7 @@ tbl_reg_3 &lt;-
 tbl_reg_4 &lt;-
 * tbl_merge(
 *   tbls = list(tbl_reg_1, tbl_reg_3),
-*   tab_spanner = c("Tumor Response", "Time to Death")
+*   tab_spanner = c("**Tumor Response**", "**Time to Death**")
 * )
 ```
 
@@ -675,7 +716,7 @@ class: inverse, center, middle
 
 
 ```r
-inline_text(tbl_reg_1, variable = "trt", level = "Drug B")
+inline_text(tbl_reg_1, variable = trt, level = "Drug B")
 ```
 
 ```
@@ -742,11 +783,10 @@ tbl_summary(
 
 - **select variables**
     - use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
-    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`
-    - use attribute (e.g `all_character() ~ ...`) or type (e.g. , `all_continuous() ~ ...`)
+    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`, including type selectors (available in next version of {dplyr})
     
 - **specify what you want to do** (depends on the argument)
-    - change the statistic you report using {glue} syntax. e.g `statistic = ... ~ "{mean} ({sd})"`
+    - change the statistic you report using [{glue}](https://github.com/tidyverse/glue) syntax where whatever in the curly brackets gets evaluated and passed directly into the string. e.g `statistic = ... ~ "{mean} ({sd})"`
     - pass a string to change labels 
 ]
 
@@ -767,6 +807,9 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
                     response ~ "fisher.test")) 
 ```
 
+
+???
+
 .large[
 - Report levels for the response variable.
 - Report mean instead of median (using glue)
@@ -780,7 +823,6 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_4.png" width=100%&gt;&lt;/p&gt;
 ]
 
-???
 
 - further discuss formula notation
     - just like {gt} can use both select helpers OR characters vector of names
@@ -825,7 +867,7 @@ And many more! https://gt.rstudio.com/
 ]
 
 ---
-# {gtsummary} tbl_summary() advanced customization
+# {gtsummary} advanced customization
 
 .pull-left[
 .large[**Advanced Customization Using {gt}**]
@@ -855,8 +897,125 @@ tbl_summary_5 &lt;- sm_trial %&gt;%
 ]
 
 ---
+# {gtsummary} advanced customization: global options
 
-# {gtsummary} Advanced
+.large[Have a consistent rounding preference or gt styling you want to apply all the time?
+
+Set some **global options** at the top of your RMD or in your .Renviron!
+]
+
+## Format {gt} tables
+For example, to make all your tables have small font size and minimal row padding (for more "compact" tables): 
+
+`options(gtsummary.as_gt.addl_cmds = "gt::tab_options(table.font.size = 'small', data_row.padding = gt::px(1))")`
+
+## Style Estimates and p-values
+For example, always round p-values to 2 digits:
+
+`options(gtsummary.pvalue_fun = function(x) style_pvalue(x, digits = 2))` 
+
+
+Check out the [Global Options](http://www.danieldsjoberg.com/gtsummary/articles/global_options.html) vignette for more examples. 
+
+
+---
+
+class: inverse, center, middle
+
+# Conclusion
+
+---
+# {gtsummary} - Package Website
+
+&lt;iframe src="http://www.danieldsjoberg.com/gtsummary/" scrolling= "yes" width = "95%" height = 95%"&gt;&lt;/iframe&gt;
+
+---
+
+# {gtsummary} Package Website &amp; Installation
+
+.large[
+* Package Website: http://www.danieldsjoberg.com/gtsummary/
+
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
+  
+* Install {gtsummary} from CRAN with the following code: 
+]
+
+
+```r
+install.packages("gtsummary")          
+```
+
+.large[
+* Also recommended to install the development version of {gt} from GitHub.
+]
+
+```r
+install.packages("remotes")
+remotes::install_github("rstudio/gt")        
+```
+
+
+
+???
+- visit the website and give quick tour
+r include_url("http://www.danieldsjoberg.com/gtsummary/", height = "400px")
+
+---
+
+class: center
+# {gtsummary} other resouces
+.large[
+
+
+&lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; {gtsummary} documentation/website &lt;a href="http://www.danieldsjoberg.com/gtsummary/"&gt;danieldsjoberg.com/gtsummary/&lt;/a&gt;
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gtsummary} package &lt;a href="https://github.com/ddsjoberg/gtsummary"&gt;github.com/ddsjoberg/gtsummary&lt;/a&gt;
+
+&lt;img src = "images/slide_show_icon.png" width="2.4%" height="2.4%"&gt; slides at &lt;a href="https://github.com/margarethannum/gtsummary-presentation-rladies"&gt;github.com/margarethannum/gtsummary-presentation-rladies&lt;/a&gt;  
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; source code for slides at &lt;a href="https://github.com/margarethannum/gtsummary-presentation-rladies"&gt;github.com/margarethannum/gtsummary-presentation-rladies&lt;/a&gt;
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
+]
+
+Slides created using [xaringan](https://github.com/yihui/xaringan)
+
+
+
+
+???
+
+Go star {gtsummary} on GitHub...we're already to 50+!
+
+
+---
+# Thank you! Questions?
+
+.medium[
+&lt;img src="images/sjoberg.jpg" width=15%&gt;
+
+Author/Maintainer: **Daniel Sjoberg**
+
+&lt;img src="images/hannum.jpg" width=15%&gt;
+&lt;img src="images/whiting.jpg" width=15%&gt;
+&lt;img src="images/curry.jpg" width=15%&gt;
+
+Authors: Margie Hannum, Karissa Whiting, Michael Curry, Emily Zabor (not pictured)
+
+&lt;img src="images/drill.jpg" width=15%&gt;
+&lt;img src="images/flynn.jpg" width=15%&gt;
+&lt;img src="images/lobaugh.jpg" width=15%&gt;
+
+Contributors: Esther Drill, Jessica Flynn, Stephanie Lobaugh
+]
+
+---
+# Appendix: {gtsummary} Advanced
 
 .large[
 {gtsummary} output is a list that prints as a {gt} table.
@@ -867,9 +1026,10 @@ names(tbl_summary_1)
 ```
 
 ```
-##  [1] "gt_calls"     "kable_calls"  "table_body"   "table_header" "meta_data"   
-##  [6] "inputs"       "N"            "call_list"    "by"           "df_by"       
-## [11] "fmt_fun"
+##  [1] "gt_calls"     "kable_calls"  "table_body"  
+##  [4] "table_header" "meta_data"    "inputs"      
+##  [7] "N"            "call_list"    "by"          
+## [10] "df_by"        "fmt_fun"
 ```
 
 .pull-left[
@@ -880,14 +1040,14 @@ pluck(tbl_summary_1, "table_body") %&gt;% head()
 
 ```
 ## # A tibble: 6 x 7
-##   variable row_type label          stat_0      stat_1      stat_2      p.value
-##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
-## 1 age      label    Age, yrs       47 (38, 57) 46 (37, 59) 48 (39, 56)   0.717
-## 2 age      missing  Unknown        11          7           4            NA    
-## 3 response label    Tumor Response 61 (32%)    28 (29%)    33 (34%)      0.637
-## 4 response missing  Unknown        7           3           4            NA    
-## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;          0.871
-## 6 grade    level    I              68 (34%)    35 (36%)    33 (32%)     NA
+##   variable row_type label    stat_0   stat_1   stat_2  p.value
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;dbl&gt;
+## 1 age      label    Age, yrs 47 (38,~ 46 (37,~ 48 (39~   0.717
+## 2 age      missing  Unknown  11       7        4        NA    
+## 3 response label    Tumor R~ 61 (32%) 28 (29%) 33 (34~   0.637
+## 4 response missing  Unknown  7        3        4        NA    
+## 5 grade    label    Grade    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;      0.871
+## 6 grade    level    I        68 (34%) 35 (36%) 33 (32~  NA
 ```
 ]
 .pull-right[
@@ -926,87 +1086,6 @@ You can replace it with whatever you choose.
 
 &lt;!-- ### Additional customization --&gt;
 &lt;!-- - **Table footnotes** (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` ) --&gt;
-
----
-
-class: inverse, center, middle
-
-# Conclusion
-
----
-
-# {gtsummary} v1.2.6 - Package Website
-
-.large[
-* Package Website: http://www.danieldsjoberg.com/gtsummary/
-
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
-  
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
-  
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
-  
-* Install {gtsummary} from CRAN with the following code: 
-]
-
-
-```r
-install.packages("gtsummary")          
-```
-
-.large[
-* Also recommended to install the development version of {gt} from GitHub.
-]
-
-```r
-install.packages("remotes")
-remotes::install_github("rstudio/gt")        
-```
-
-
-
-???
-- visit the website and give quick tour
----
-
-class: center
-# {gtsummary}
-.large[
-• Every function is documented further in the help file •
-
-• Check out the package website for vignettes including detailed examples and explanations •
-
-&lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; {gtsummary} documentation/website &lt;a href="http://www.danieldsjoberg.com/gtsummary/"&gt;danieldsjoberg.com/gtsummary/&lt;/a&gt;
-
-&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gtsummary} package &lt;a href="https://github.com/ddsjoberg/gtsummary"&gt;github.com/ddsjoberg/gtsummary&lt;/a&gt;
-
-&lt;img src = "images/slide_show_icon.png" width="2.4%" height="2.4%"&gt; slides at &lt;a href="https://github.com/margarethannum/gtsummary-presentation-rladies"&gt;github.com/margarethannum/gtsummary-presentation-rladies&lt;/a&gt;  
-
-&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; source code for slides at &lt;a href="https://github.com/margarethannum/gtsummary-presentation-rladies"&gt;github.com/margarethannum/gtsummary-presentation-rladies&lt;/a&gt;
-
-&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
-]
-
-???
-
-Go star {gtsummary} on GitHub...we're already to 50+!
-
-
----
-# Questions?
-
-
-
----
-# Thank you
-
-.large[
-Author/Maintainer: **Daniel Sjoberg** (Many slides &amp; materials taken from his presentation!)
-
-Authors: Margie Hannum, Karissa Whiting, Emily Zabor, Michael Curry
-
-Contributors: Esther Drill, Jessica Flynn
-]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

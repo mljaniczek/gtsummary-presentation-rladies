@@ -39,11 +39,10 @@ tbl_summary(
 
 - **select variables**
     - use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
-    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`
-    - use attribute (e.g `all_character() ~ ...`) or type (e.g. , `all_continuous() ~ ...`)
+    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`, including type selectors (available in next version of {dplyr})
     
 - **specify what you want to do** (depends on the argument)
-    - change the statistic you report using {glue} syntax. e.g `statistic = ... ~ "{mean} ({sd})"`
+    - change the statistic you report using [{glue}](https://github.com/tidyverse/glue) syntax where whatever in the curly brackets gets evaluated and passed directly into the string. e.g `statistic = ... ~ "{mean} ({sd})"`
     - pass a string to change labels 
 ]
 
@@ -65,6 +64,9 @@ tbl_summary_4 <- sm_trial %>%
 ```{r, include=FALSE}
 # gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
 ```
+
+???
+
 .large[
 - Report levels for the response variable.
 - Report mean instead of median (using glue)
@@ -78,7 +80,6 @@ tbl_summary_4 <- sm_trial %>%
 <p align="center"><img src="images/tbl_summary_4.png" width=100%></p>
 ]
 
-???
 
 - further discuss formula notation
     - just like {gt} can use both select helpers OR characters vector of names
@@ -123,7 +124,7 @@ And many more! https://gt.rstudio.com/
 ]
 
 ---
-# {gtsummary} tbl_summary() advanced customization
+# {gtsummary} advanced customization
 
 .pull-left[
 .large[**Advanced Customization Using {gt}**]
@@ -154,39 +155,23 @@ tbl_summary_5 <- sm_trial %>%
 ]
 
 ---
+# {gtsummary} advanced customization: global options
 
-# {gtsummary} Advanced
+.large[Have a consistent rounding preference or gt styling you want to apply all the time?
 
-.large[
-{gtsummary} output is a list that prints as a {gt} table.
-]
-```{r}
-names(tbl_summary_1)
-```
-
-.pull-left[
-```{r}
-pluck(tbl_summary_1, "table_body") %>% head()
-```
-]
-.pull-right[
-```{r}
-pluck(tbl_summary_1, "gt_calls") %>% head(n = 4)
-```
+Set some **global options** at the top of your RMD or in your .Renviron!
 ]
 
-???
+## Format {gt} tables
+For example, to make all your tables have small font size and minimal row padding (for more "compact" tables): 
 
-If there is time, review the structure of a {gtsummary} object
+`options(gtsummary.as_gt.addl_cmds = "gt::tab_options(table.font.size = 'small', data_row.padding = gt::px(1))")`
 
-Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever the object is printed.
+## Style Estimates and p-values
+For example, always round p-values to 2 digits:
 
-Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
+`options(gtsummary.pvalue_fun = function(x) style_pvalue(x, digits = 2))` 
 
-You can replace it with whatever you choose.
 
-<!-- --- -->
-<!-- # Customization -->
+Check out the [Global Options](http://www.danieldsjoberg.com/gtsummary/articles/global_options.html) vignette for more examples. 
 
-<!-- ### Additional customization -->
-<!-- - **Table footnotes** (you can optionally exclude these using `as_gt(exclude = "footnote_stat_label")` ) -->
