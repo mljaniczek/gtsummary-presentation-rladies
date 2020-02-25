@@ -5,7 +5,7 @@ class: inverse, center, middle
 ---
 # {gtsummary} - Package Website
 
-<iframe src="http://www.danieldsjoberg.com/gtsummary/" scrolling= "yes" width = "95%" height = 95%"></iframe>
+<iframe src="http://www.danieldsjoberg.com/gtsummary/" scrolling= "yes" width = "950%" height = 90%"></iframe>
 
 ---
 
