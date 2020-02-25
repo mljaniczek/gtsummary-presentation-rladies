@@ -471,10 +471,8 @@ m1 &lt;- glm(response ~ trt + grade + age,
 ##     data = trial)
 ## 
 ## Coefficients:
-## (Intercept)    trtDrug B      gradeII     gradeIII  
-##   -1.694687     0.124330    -0.160518     0.007672  
-##         age  
-##    0.019000  
+## (Intercept)    trtDrug B      gradeII     gradeIII          age  
+##   -1.694687     0.124330    -0.160518     0.007672     0.019000  
 ## 
 ## Degrees of Freedom: 182 Total (i.e. Null);  178 Residual
 ##   (17 observations deleted due to missingness)
@@ -521,14 +519,13 @@ m1 &lt;- glm(response ~ trt + grade + age,
 
 ```
 ## # A tibble: 5 x 7
-##   term  estimate std.error statistic p.value conf.low
-##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Int~    0.184    0.630    -2.69   0.00715   0.0509
-## 2 trtD~    1.13     0.321     0.387  0.699     0.603 
-## 3 grad~    0.852    0.395    -0.406  0.685     0.389 
-## 4 grad~    1.01     0.385     0.0199 0.984     0.472 
-## 5 age      1.02     0.0114    1.67   0.0952    0.997 
-## # ... with 1 more variable: conf.high &lt;dbl&gt;
+##   term        estimate std.error statistic p.value conf.low conf.high
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    0.184    0.630    -2.69   0.00715   0.0509     0.610
+## 2 trtDrug B      1.13     0.321     0.387  0.699     0.603      2.13 
+## 3 gradeII        0.852    0.395    -0.406  0.685     0.389      1.85 
+## 4 gradeIII       1.01     0.385     0.0199 0.984     0.472      2.15 
+## 5 age            1.02     0.0114    1.67   0.0952    0.997      1.04
 ```
 ]
 
@@ -1026,10 +1023,9 @@ names(tbl_summary_1)
 ```
 
 ```
-##  [1] "gt_calls"     "kable_calls"  "table_body"  
-##  [4] "table_header" "meta_data"    "inputs"      
-##  [7] "N"            "call_list"    "by"          
-## [10] "df_by"        "fmt_fun"
+##  [1] "gt_calls"     "kable_calls"  "table_body"   "table_header" "meta_data"   
+##  [6] "inputs"       "N"            "call_list"    "by"           "df_by"       
+## [11] "fmt_fun"
 ```
 
 .pull-left[
@@ -1040,14 +1036,14 @@ pluck(tbl_summary_1, "table_body") %&gt;% head()
 
 ```
 ## # A tibble: 6 x 7
-##   variable row_type label    stat_0   stat_1   stat_2  p.value
-##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;dbl&gt;
-## 1 age      label    Age, yrs 47 (38,~ 46 (37,~ 48 (39~   0.717
-## 2 age      missing  Unknown  11       7        4        NA    
-## 3 response label    Tumor R~ 61 (32%) 28 (29%) 33 (34~   0.637
-## 4 response missing  Unknown  7        3        4        NA    
-## 5 grade    label    Grade    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;      0.871
-## 6 grade    level    I        68 (34%) 35 (36%) 33 (32~  NA
+##   variable row_type label          stat_0      stat_1      stat_2      p.value
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
+## 1 age      label    Age, yrs       47 (38, 57) 46 (37, 59) 48 (39, 56)   0.717
+## 2 age      missing  Unknown        11          7           4            NA    
+## 3 response label    Tumor Response 61 (32%)    28 (29%)    33 (34%)      0.637
+## 4 response missing  Unknown        7           3           4            NA    
+## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;          0.871
+## 6 grade    level    I              68 (34%)    35 (36%)    33 (32%)     NA
 ```
 ]
 .pull-right[
