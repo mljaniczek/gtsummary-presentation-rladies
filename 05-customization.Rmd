@@ -37,13 +37,15 @@ tbl_summary(
 **select variables ~ specifiy what you want to do** 
 ]
 
-- **select variables**
-    - use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
-    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`, including type selectors (available in next version of {dplyr})
+.pull-left[**select variables**
+* use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
+* use any {tidyselect} functions, e.g. `contains("stage") ~ ...`, including type selectors (available in next version of {dplyr})
+    ]
     
-- **specify what you want to do** (depends on the argument)
-    - change the statistic you report using [{glue}](https://github.com/tidyverse/glue) syntax where whatever in the curly brackets gets evaluated and passed directly into the string. e.g `statistic = ... ~ "{mean} ({sd})"`
-    - pass a string to change labels 
+.pull-right[**specify what you want to do** (depends on the argument)
+* change the statistic you report using [{glue}](https://github.com/tidyverse/glue) syntax where whatever in the curly brackets gets evaluated and passed directly into the string. e.g `statistic = ... ~ "{mean} ({sd})"`
+* pass a string to change labels 
+    ]
 ]
 
 ---

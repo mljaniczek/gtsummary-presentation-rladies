@@ -7,8 +7,8 @@
     <meta name="date" content="2020-02-26" />
     <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
-    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="my-theme.css" type="text/css" />
   </head>
   <body>
@@ -25,6 +25,7 @@ class: inverse, left, middle
 .pull-left[
 **Margie Hannum**
 
+Department of Epidemiology &amp; Biostatistics  
 Memorial Sloan Kettering Cancer Center
 
 RLadies NYC, February 26, 2020
@@ -65,7 +66,7 @@ A special kind of confidence interval formula instead of the default?
 
 &lt;img src="images/tang_retrospective_bonemarrow_mva.png" width=60%&gt;
 
-.footnote[Table from &lt;a href="https://www.nature.com/articles/s41409-019-0441-4"&gt;Tang et. al, *Bone Marrow Transplantation* (February 2019)&lt;/a&gt;]
+.footnote[&lt;a href="https://www.nature.com/articles/s41409-019-0441-4"&gt;Tang et. al, *Bone Marrow Transplantation* (February 2019)&lt;/a&gt;]
 
 
 ---
@@ -93,7 +94,7 @@ A special kind of confidence interval formula instead of the default?
 ---
 
 
-# {gt} - an aside
+# Background: {gt}
 
 .large[
 .pull-left[
@@ -119,7 +120,7 @@ A special kind of confidence interval formula instead of the default?
 ---
 
 
-# {gt} - an aside
+# Background: {gt}
 
 &lt;img src="images/gt_parts_of_a_table.png" width=70%&gt;
 
@@ -131,7 +132,7 @@ the gt documentation is great!
 all functions grouped by the part of a table they modify
 
 ---
-# {gt} - an aside
+# Background: {gt}
 
 
 
@@ -584,8 +585,8 @@ m1 &lt;- glm(response ~ trt + grade + age,
 .pull-left[
 .large[
 **Format variables with `tbl_regression` arguments**
-- `label` - Specify labels
 - `show_single_row` - If variable is dichotomous (e.g. Yes/No), you can choose to print regression coefficient on a single row
+- `label` - Specify labels
 ]]
 
 .pull-right[
@@ -780,13 +781,15 @@ tbl_summary(
 **select variables ~ specifiy what you want to do** 
 ]
 
-- **select variables**
-    - use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
-    - use any {tidyselect} functions, e.g. `contains("stage") ~ ...`, including type selectors (available in next version of {dplyr})
+.pull-left[**select variables**
+* use quoted or unquoted variables, minus sign to negate (e.g. `age` or `"age"` to select, `-age` to deselect)
+* use any {tidyselect} functions, e.g. `contains("stage") ~ ...`, including type selectors (available in next version of {dplyr})
+    ]
     
-- **specify what you want to do** (depends on the argument)
-    - change the statistic you report using [{glue}](https://github.com/tidyverse/glue) syntax where whatever in the curly brackets gets evaluated and passed directly into the string. e.g `statistic = ... ~ "{mean} ({sd})"`
-    - pass a string to change labels 
+.pull-right[**specify what you want to do** (depends on the argument)
+* change the statistic you report using [{glue}](https://github.com/tidyverse/glue) syntax where whatever in the curly brackets gets evaluated and passed directly into the string. e.g `statistic = ... ~ "{mean} ({sd})"`
+* pass a string to change labels 
+    ]
 ]
 
 ---
@@ -974,7 +977,9 @@ class: center
 &lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
 ]
 
-Slides created using [xaringan](https://github.com/yihui/xaringan)
+Slides created using [xaringan](https://github.com/yihui/xaringan) R package
+
+[R-Ladies xaringan theme](https://alison.rbind.io/post/2017-12-18-r-ladies-presentation-ninja/) from Alison Hill (@apreshill)
 
 
 
@@ -1085,7 +1090,7 @@ You can replace it with whatever you choose.
 "ratio": "16:9",
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": true
+"countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

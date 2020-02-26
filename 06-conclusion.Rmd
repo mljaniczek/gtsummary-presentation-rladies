@@ -59,7 +59,9 @@ class: center
 <img src = "images/github_icon.png" width="2.4%" height="2.4%"> {gt} package <a href="https://github.com/rstudio/gt">github.com/rstudio/gt</a>
 ]
 
-Slides created using [xaringan](https://github.com/yihui/xaringan)
+Slides created using [xaringan](https://github.com/yihui/xaringan) R package
+
+[R-Ladies xaringan theme](https://alison.rbind.io/post/2017-12-18-r-ladies-presentation-ninja/) from Alison Hill (@apreshill)
 
 ```{r include = FALSE, echo=FALSE, eval=FALSE}
 library(lubridate)

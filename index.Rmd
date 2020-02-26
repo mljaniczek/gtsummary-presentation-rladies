@@ -5,14 +5,14 @@ author: "Margie Hannum <br/><br/>Memorial Sloan Kettering Cancer Center<br/><br/
 date: "February 26, 2020"
 output:
   xaringan::moon_reader:
-    css: [ninjutsu, default, metropolis, metropolis-fonts, "my-theme.css"]
+    css: [ninjutsu, default, rladies, rladies-fonts, "my-theme.css"]
     lib_dir: libs
     seal: false
     nature:
       ratio: 16:9
       highlightStyle: github
       highlightLines: true
-      countIncrementalSlides: true
+      countIncrementalSlides: false
 ---
 
 ```{r setup, include=FALSE}
@@ -38,6 +38,7 @@ class: inverse, left, middle
 .pull-left[
 **Margie Hannum**
 
+Department of Epidemiology & Biostatistics  
 Memorial Sloan Kettering Cancer Center
 
 RLadies NYC, February 26, 2020
@@ -78,7 +79,7 @@ A special kind of confidence interval formula instead of the default?
 
 <img src="images/tang_retrospective_bonemarrow_mva.png" width=60%>
 
-.footnote[Table from <a href="https://www.nature.com/articles/s41409-019-0441-4">Tang et. al, *Bone Marrow Transplantation* (February 2019)</a>]
+.footnote[<a href="https://www.nature.com/articles/s41409-019-0441-4">Tang et. al, *Bone Marrow Transplantation* (February 2019)</a>]
 
 
 ---
@@ -106,7 +107,7 @@ A special kind of confidence interval formula instead of the default?
 ---
 
 
-# {gt} - an aside
+# Background: {gt}
 
 .large[
 .pull-left[
@@ -132,7 +133,7 @@ A special kind of confidence interval formula instead of the default?
 ---
 
 
-# {gt} - an aside
+# Background: {gt}
 
 <img src="images/gt_parts_of_a_table.png" width=70%>
 
@@ -144,7 +145,7 @@ the gt documentation is great!
 all functions grouped by the part of a table they modify
 
 ---
-# {gt} - an aside
+# Background: {gt}
 
 
 

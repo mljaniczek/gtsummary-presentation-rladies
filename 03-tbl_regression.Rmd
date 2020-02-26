@@ -115,8 +115,8 @@ tbl_reg_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
 .pull-left[
 .large[
 **Format variables with `tbl_regression` arguments**
-- `label` - Specify labels
 - `show_single_row` - If variable is dichotomous (e.g. Yes/No), you can choose to print regression coefficient on a single row
+- `label` - Specify labels
 ]]
 
 .pull-right[
