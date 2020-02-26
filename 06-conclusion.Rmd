@@ -9,46 +9,52 @@ class: inverse, center, middle
 
 ---
 
-# {gtsummary} Package Website & Installation
+# {gtsummary} Installation
 
-.large[
-* Package Website: http://www.danieldsjoberg.com/gtsummary/
+.pull-left[
+.medium[
+
+* Install {gtsummary} from **CRAN** with the following code: 
+
+``` {r, eval=FALSE}
+install.packages("gtsummary")          
+```
+
+
+* Also recommended to install the development version of {gt} from **GitHub**.
+
+``` {r, eval=FALSE}
+install.packages("remotes")
+remotes::install_github("rstudio/gt")        
+```
+  
+]
+]
+
+.pull-right[
+<img src="images/cranlogs.png" width=100%>
+]
+
+???
+- visit the website and give quick tour
+r include_url("http://www.danieldsjoberg.com/gtsummary/", height = "400px")
+
+* {gtsummary} package website: http://www.danieldsjoberg.com/gtsummary/
 
   * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Installation instructions
   
   * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Thorough documentation on every function
   
   * <img src = "images/open-book-white.png" width="2.4%" height="2.4%"> Detailed tutorials 
-  
-* Install {gtsummary} from CRAN with the following code: 
-]
-
-``` {r, eval=FALSE}
-install.packages("gtsummary")          
-```
-
-.large[
-* Also recommended to install the development version of {gt} from GitHub.
-]
-``` {r, eval=FALSE}
-install.packages("remotes")
-remotes::install_github("rstudio/gt")        
-```
-
-
-
-???
-- visit the website and give quick tour
-r include_url("http://www.danieldsjoberg.com/gtsummary/", height = "400px")
 
 ---
 
 class: center
-# {gtsummary} other resouces
+# Resources
 .large[
 
 
-<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {gtsummary} documentation/website <a href="http://www.danieldsjoberg.com/gtsummary/">danieldsjoberg.com/gtsummary/</a>
+<img src = "images/open-book-white.png" width="2.4%" height="2.4%"> {gtsummary} documentation/website/tutorials <a href="http://www.danieldsjoberg.com/gtsummary/">danieldsjoberg.com/gtsummary/</a>
 
 <img src = "images/github_icon.png" width="2.4%" height="2.4%"> {gtsummary} package <a href="https://github.com/ddsjoberg/gtsummary">github.com/ddsjoberg/gtsummary</a>
 
@@ -69,7 +75,7 @@ library(scales)
 library(tidyverse)
 theme_set(mskRvis::theme_biostat())
 
-dl <- cranlogs::cran_downloads(packages = "gtsummary", from = "2019-05-01", to = "last-day")
+dl <- cranlogs::cran_downloads(packages = "gtsummary", from = "2019-08-19", to = "last-day")
 
 
 dlmonth <- dl %>% 
@@ -80,23 +86,23 @@ dlmonth <- dl %>%
 p <- ggplot(dlmonth, aes(x = month, y = amount)) +
   geom_line() + 
   xlab("") +
-  coord_cartesian(ylim = c(0,1700)) +
+  coord_cartesian(ylim = c(0,1600)) +
   labs(
     title = "{gtsummary} CRAN downloads",
     subtitle = "source: cranlogs"
   ) +
   ylab("Downloads/Month") +
-  xlab("Months since first CRAN release (May 2019)") +
-  # scale_x_date(
-  #   date_breaks = "1 month",
-  #   labels = date_format("%m-%Y")) +
+  xlab("Months since official CRAN release (August 2019)") +
+  scale_x_date(
+    date_breaks = "1 month",
+    labels = date_format("%m-%Y")) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))  #+
    # geom_vline(xintercept = as.numeric(as.Date("2019-05-01")),
    #            linetype = 4,
    #            color = "seagreen")
   
 
-p
+#ggsave(p, filename = "images/cranlogs.png")
 ```
 
 
@@ -106,25 +112,24 @@ Go star {gtsummary} on GitHub...we're already to 50+!
 
 
 ---
-# Thank you! Questions?
+# Thank you! 
 
-.medium[
 <img src="images/sjoberg.jpg" width=15%>
-
-Author/Maintainer: **Daniel Sjoberg**
-
 <img src="images/hannum.jpg" width=15%>
 <img src="images/whiting.jpg" width=15%>
+
+♥ {gtsummary} Authors: [**Daniel Sjoberg**](http://www.danieldsjoberg.com/) (Maintainer), Margie Hannum, Karissa Whiting
+
 <img src="images/curry.jpg" width=15%>
-
-Authors: Margie Hannum, Karissa Whiting, Michael Curry, Emily Zabor (not pictured)
-
 <img src="images/drill.jpg" width=15%>
 <img src="images/flynn.jpg" width=15%>
 <img src="images/lobaugh.jpg" width=15%>
 
-Contributors: Esther Drill, Jessica Flynn, Stephanie Lobaugh
-]
+♥ {gtsummary} Contributors: Emily Zabor (not pictured), Michael Curry, Esther Drill, Jessica Flynn, Stephanie Lobaugh
+
+♥ Huge thank you to [Rich Iannone](https://github.com/rich-iannone), the Author/Maintainer of the {gt} package.
+
+♥ And thank you to everyone in Epidemiology and Biostatistics at Memorial Sloan Kettering for testing the package and providing valuable feedback! 
 
 ---
 # Appendix: {gtsummary} Advanced

@@ -22,17 +22,18 @@ class: inverse, left, middle
 # **gtsummary**: Creating publication-ready analytical tables
 
 .large[
-.pull-left[
-**Margie Hannum**
 
-Department of Epidemiology &amp; Biostatistics  
+**Margie Hannum**  
+Research Biostatistician, Department of Epidemiology &amp; Biostatistics  
 Memorial Sloan Kettering Cancer Center
 
-RLadies NYC, February 26, 2020
+**RLadies NYC**  
+February 26, 2020
 
-.footnote[Twitter: @Margaret-Hannum  Github: @margarethannum ]
 ]
-]
+
+.medium[.footnote[Twitter: @Margaret-Hannum       Github: @margarethannum ]]
+
 
 
  
@@ -141,7 +142,7 @@ all functions grouped by the part of a table they modify
 .pull-left[.footnote[Image source: https://gt.rstudio.com/]]
 
 ???
-* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer).
+* Workflow: input data frame or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer).
 
 ---
 # {gtsummary} Print Engines - gt or kable?
@@ -182,7 +183,7 @@ all functions grouped by the part of a table they modify
 .footnote[All examples shown use {gt} print engine]
 
 ---
-# **trial** dataset overview
+# **trial** data set overview
 
 .pull-left[
 
@@ -205,9 +206,9 @@ all functions grouped by the part of a table they modify
 
 .medium[
 .pull-right[
-* Throughout this presentation examples will use the `trial` dataset, included with {gtsummary}. 
+* Throughout this presentation examples will use the `trial` data set, included with {gtsummary}. 
 
-* Dataset contains baseline characterstics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
+* Data set contains baseline characteristics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
 
 * Variables have label attributes assigned using the `labelled` package. 
 
@@ -421,7 +422,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 
 .medium[
 - Use **{tidyselect}** functions to select variables for customization
-- Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
+- Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (including user-written functions)
 - **Formatting** functions to bold and italicize labels and levels
 - **Missing data** options
 - **Sort variables** by significance (`sort_p()`); sort categorical variables by frequency  
@@ -746,12 +747,12 @@ class: inverse, center, middle
 # Customization
 
 ---
-# {gtsummary} tbl_summary() Formulas
+# {gtsummary} Formulas
 .large[
 **Formulas**
 
 
-- Most arguments to `tbl_summary()` require formula syntax, and provide many more options to easily select the table variables you want to modify.   
+- Most arguments to `tbl_summary()` and `tbl_regression()` require formula syntax, and provide many more options to easily select the table variables you want to modify.   
 
 .center[
 
@@ -773,7 +774,7 @@ tbl_summary(
 
 
 ---
-# {gtsummary} tbl_summary() Formulas
+# {gtsummary} Formulas
 .large[
 **Formulas**
 .center[
@@ -830,9 +831,8 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 - discuss `stat_label = `, and mention the footnote was omitted
 
 ---
-# {gtsummary} tbl_summary() advanced customization
-.large[**Advanced Customization Using {gt}**
-
+# {gtsummary} advanced customization: using {gt}
+.large[
 - It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
 
 - Every function in {gt} is available to use with a {gtsummary} object.
@@ -861,10 +861,9 @@ Discuss `as_gt()` and how to use
 And many more! https://gt.rstudio.com/
 
 ---
-# {gtsummary} advanced customization
+# {gtsummary} advanced customization: using {gt}
 
 .pull-left[
-.large[**Advanced Customization Using {gt}**]
 
 
 ```r
@@ -925,48 +924,54 @@ class: inverse, center, middle
 
 ---
 
-# {gtsummary} Package Website &amp; Installation
+# {gtsummary} Installation
 
-.large[
-* Package Website: http://www.danieldsjoberg.com/gtsummary/
+.pull-left[
+.medium[
 
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
-  
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
-  
-  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
-  
-* Install {gtsummary} from CRAN with the following code: 
-]
+* Install {gtsummary} from **CRAN** with the following code: 
 
 
 ```r
 install.packages("gtsummary")          
 ```
 
-.large[
-* Also recommended to install the development version of {gt} from GitHub.
-]
+
+* Also recommended to install the development version of {gt} from **GitHub**.
+
 
 ```r
 install.packages("remotes")
 remotes::install_github("rstudio/gt")        
 ```
+  
+]
+]
 
-
+.pull-right[
+&lt;img src="images/cranlogs.png" width=100%&gt;
+]
 
 ???
 - visit the website and give quick tour
 r include_url("http://www.danieldsjoberg.com/gtsummary/", height = "400px")
 
+* {gtsummary} package website: http://www.danieldsjoberg.com/gtsummary/
+
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Installation instructions
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Thorough documentation on every function
+  
+  * &lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; Detailed tutorials 
+
 ---
 
 class: center
-# {gtsummary} other resouces
+# Resources
 .large[
 
 
-&lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; {gtsummary} documentation/website &lt;a href="http://www.danieldsjoberg.com/gtsummary/"&gt;danieldsjoberg.com/gtsummary/&lt;/a&gt;
+&lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; {gtsummary} documentation/website/tutorials &lt;a href="http://www.danieldsjoberg.com/gtsummary/"&gt;danieldsjoberg.com/gtsummary/&lt;/a&gt;
 
 &lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gtsummary} package &lt;a href="https://github.com/ddsjoberg/gtsummary"&gt;github.com/ddsjoberg/gtsummary&lt;/a&gt;
 
@@ -990,25 +995,24 @@ Go star {gtsummary} on GitHub...we're already to 50+!
 
 
 ---
-# Thank you! Questions?
+# Thank you! 
 
-.medium[
 &lt;img src="images/sjoberg.jpg" width=15%&gt;
-
-Author/Maintainer: **Daniel Sjoberg**
-
 &lt;img src="images/hannum.jpg" width=15%&gt;
 &lt;img src="images/whiting.jpg" width=15%&gt;
+
+♥ {gtsummary} Authors: [**Daniel Sjoberg**](http://www.danieldsjoberg.com/) (Maintainer), Margie Hannum, Karissa Whiting
+
 &lt;img src="images/curry.jpg" width=15%&gt;
-
-Authors: Margie Hannum, Karissa Whiting, Michael Curry, Emily Zabor (not pictured)
-
 &lt;img src="images/drill.jpg" width=15%&gt;
 &lt;img src="images/flynn.jpg" width=15%&gt;
 &lt;img src="images/lobaugh.jpg" width=15%&gt;
 
-Contributors: Esther Drill, Jessica Flynn, Stephanie Lobaugh
-]
+♥ {gtsummary} Contributors: Emily Zabor (not pictured), Michael Curry, Esther Drill, Jessica Flynn, Stephanie Lobaugh
+
+♥ Huge thank you to [Rich Iannone](https://github.com/rich-iannone), the Author/Maintainer of the {gt} package.
+
+♥ And thank you to everyone in Epidemiology and Biostatistics at Memorial Sloan Kettering for testing the package and providing valuable feedback! 
 
 ---
 # Appendix: {gtsummary} Advanced

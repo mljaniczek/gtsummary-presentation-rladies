@@ -35,17 +35,18 @@ class: inverse, left, middle
 # **gtsummary**: Creating publication-ready analytical tables
 
 .large[
-.pull-left[
-**Margie Hannum**
 
-Department of Epidemiology & Biostatistics  
+**Margie Hannum**  
+Research Biostatistician, Department of Epidemiology & Biostatistics  
 Memorial Sloan Kettering Cancer Center
 
-RLadies NYC, February 26, 2020
+**RLadies NYC**  
+February 26, 2020
 
-.footnote[Twitter: @Margaret-Hannum  Github: @margarethannum ]
 ]
-]
+
+.medium[.footnote[Twitter: @Margaret-Hannum       Github: @margarethannum ]]
+
 
 
  
@@ -154,7 +155,7 @@ all functions grouped by the part of a table they modify
 .pull-left[.footnote[Image source: https://gt.rstudio.com/]]
 
 ???
-* Workflow: input dataframe or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer).
+* Workflow: input data frame or tibble, create gt object (list with data and formatting elements), output gt table as HTML (previewed in the Viewer).
 
 ---
 # {gtsummary} Print Engines - gt or kable?
@@ -195,7 +196,7 @@ all functions grouped by the part of a table they modify
 .footnote[All examples shown use {gt} print engine]
 
 ---
-# **trial** dataset overview
+# **trial** data set overview
 
 .pull-left[
 
@@ -208,9 +209,9 @@ head(trial, 3) #<<
 
 .medium[
 .pull-right[
-* Throughout this presentation examples will use the `trial` dataset, included with {gtsummary}. 
+* Throughout this presentation examples will use the `trial` data set, included with {gtsummary}. 
 
-* Dataset contains baseline characterstics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
+* Data set contains baseline characteristics of 200 patients who received Drug A or Drug B. Includes outcome of tumor response to the treatment. 
 
 * Variables have label attributes assigned using the `labelled` package. 
 

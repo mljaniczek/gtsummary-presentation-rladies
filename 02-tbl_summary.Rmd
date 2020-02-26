@@ -177,7 +177,7 @@ tbl_summary_3 <- sm_trial %>%
 
 .medium[
 - Use **{tidyselect}** functions to select variables for customization
-- Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (inlcuding user-written functions)
+- Use **custom functions** for calculating p-values and reporting any statistic for continuous variables (including user-written functions)
 - **Formatting** functions to bold and italicize labels and levels
 - **Missing data** options
 - **Sort variables** by significance (`sort_p()`); sort categorical variables by frequency  

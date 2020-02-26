@@ -2,12 +2,12 @@ class: inverse, center, middle
 # Customization
 
 ---
-# {gtsummary} tbl_summary() Formulas
+# {gtsummary} Formulas
 .large[
 **Formulas**
 
 
-- Most arguments to `tbl_summary()` require formula syntax, and provide many more options to easily select the table variables you want to modify.   
+- Most arguments to `tbl_summary()` and `tbl_regression()` require formula syntax, and provide many more options to easily select the table variables you want to modify.   
 
 .center[
 
@@ -29,7 +29,7 @@ tbl_summary(
 
 
 ---
-# {gtsummary} tbl_summary() Formulas
+# {gtsummary} Formulas
 .large[
 **Formulas**
 .center[
@@ -87,9 +87,8 @@ tbl_summary_4 <- sm_trial %>%
 - discuss `stat_label = `, and mention the footnote was omitted
 
 ---
-# {gtsummary} tbl_summary() advanced customization
-.large[**Advanced Customization Using {gt}**
-
+# {gtsummary} advanced customization: using {gt}
+.large[
 - It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
 
 - Every function in {gt} is available to use with a {gtsummary} object.
@@ -118,10 +117,9 @@ Discuss `as_gt()` and how to use
 And many more! https://gt.rstudio.com/
 
 ---
-# {gtsummary} advanced customization
+# {gtsummary} advanced customization: using {gt}
 
 .pull-left[
-.large[**Advanced Customization Using {gt}**]
 
 ```{r, results = FALSE}
 tbl_summary_5 <- sm_trial %>%
