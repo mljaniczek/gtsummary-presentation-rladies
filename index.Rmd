@@ -51,19 +51,12 @@ RLadies NYC, February 26, 2020
 
 ---
 
-# Motivation
+# Motivation: reproducible, presentation-ready tables
 
-.pull-left[
-.large[
-- Create reproducible, customizable summary and analytic tables that are ready to present.
-]
+<img src="images/tang_retrospective_bonemarrow_demographic.png" width=60%>
 
-.footnote[Table from <a href="https://www.nature.com/articles/leu201796">Howard et. al, *Leukemia* (November 2017)</a>]
-]
+.footnote[<a href="https://www.nature.com/articles/s41409-019-0441-4">Tang et. al, *Bone Marrow Transplantation* (February 2019)</a>]
 
-.pull-right[
-<img src="images/nature_baseline_char_howard.jpg" width=100%>
-]
 
 
 ???
@@ -79,6 +72,13 @@ RLadies NYC, February 26, 2020
 A special kind of confidence interval formula instead of the default?
 
 - Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
+---
+
+# Motivation: reproducible, presentation-ready tables
+
+<img src="images/tang_retrospective_bonemarrow_mva.png" width=60%>
+
+.footnote[Table from <a href="https://www.nature.com/articles/s41409-019-0441-4">Tang et. al, *Bone Marrow Transplantation* (February 2019)</a>]
 
 
 ---

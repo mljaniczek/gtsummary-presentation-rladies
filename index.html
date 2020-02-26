@@ -38,19 +38,12 @@ RLadies NYC, February 26, 2020
 
 ---
 
-# Motivation
+# Motivation: reproducible, presentation-ready tables
 
-.pull-left[
-.large[
-- Create reproducible, customizable summary and analytic tables that are ready to present.
-]
+&lt;img src="images/tang_retrospective_bonemarrow_demographic.png" width=60%&gt;
 
-.footnote[Table from &lt;a href="https://www.nature.com/articles/leu201796"&gt;Howard et. al, *Leukemia* (November 2017)&lt;/a&gt;]
-]
+.footnote[&lt;a href="https://www.nature.com/articles/s41409-019-0441-4"&gt;Tang et. al, *Bone Marrow Transplantation* (February 2019)&lt;/a&gt;]
 
-.pull-right[
-&lt;img src="images/nature_baseline_char_howard.jpg" width=100%&gt;
-]
 
 
 ???
@@ -66,6 +59,13 @@ RLadies NYC, February 26, 2020
 A special kind of confidence interval formula instead of the default?
 
 - Often end up doing formatting after-the-fact which is not reproducible! Or, people have their own siloed code to make tables a particular way that they like (also not reproducible and shareable, unless they also make a package)
+---
+
+# Motivation: reproducible, presentation-ready tables
+
+&lt;img src="images/tang_retrospective_bonemarrow_mva.png" width=60%&gt;
+
+.footnote[Table from &lt;a href="https://www.nature.com/articles/s41409-019-0441-4"&gt;Tang et. al, *Bone Marrow Transplantation* (February 2019)&lt;/a&gt;]
 
 
 ---
@@ -324,13 +324,6 @@ tbl_summary_1 &lt;- sm_trial %&gt;%
 * add_overall()
 ```
 
-.medium[
-- `by =` argument to split table by a categorical variable
-- `add_p()` - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
-- `add_overall()` - to add back in an overall summary of the data (not split by the `by` argument)
-
-
-]
 ]
 .pull-right[
 &lt;br&gt;
@@ -339,6 +332,15 @@ tbl_summary_1 &lt;- sm_trial %&gt;%
 ]
 
 ???
+
+.medium[
+- `by =` argument to split table by a categorical variable
+- `add_p()` - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
+- `add_overall()` - to add back in an overall summary of the data (not split by the `by` argument)
+
+
+]
+
 - Go slow here
 
 - summarizing a data set is the MOST important analysis
@@ -371,8 +373,8 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
   tbl_summary(
     by = trt,
     statistic = list(
-      all_continuous() ~ "{mean} ({sd})", 
-      all_categorical() ~ "{n} / {N} ({p}%)"),
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} / {N} ({p}%)"), 
     label = age ~ "Patient Age") %&gt;%
   add_p(test = all_continuous() ~ "t.test")
 ```
@@ -804,22 +806,18 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
                     response ~ "fisher.test")) 
 ```
 
-
-???
-
-.large[
-- Report levels for the response variable.
-- Report mean instead of median (using glue)
-- Modify the default rounding for age.
-- Specify t-test for all continuous variables and Fisher's test for response variable.
-
-
 ]
-]
+
 .pull-right[
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_4.png" width=100%&gt;&lt;/p&gt;
 ]
 
+???
+
+- Report levels for the response variable.
+- Report mean instead of median (using glue)
+- Modify the default rounding for age.
+- Specify t-test for all continuous variables and Fisher's test for response variable.
 
 - further discuss formula notation
     - just like {gt} can use both select helpers OR characters vector of names
@@ -840,17 +838,14 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 
     1. Convert the table to a {gt} object with the `as_gt()` function.
 
-    1. Continue formatting as a {gt} table with any {gt} function.
+    1. Continue formatting as a {gt} table with any {gt} function. https://gt.rstudio.com/
 ]
 
 ???
 
 Discuss `as_gt()` and how to use
 
-
----
-# {gtsummary} tbl_summary() advanced customization
-.large[**Advanced Customization Using {gt}**
+**Advanced Customization Using {gt}**
 
 - tab_header() - add a table title
 
@@ -861,7 +856,6 @@ Discuss `as_gt()` and how to use
 - tab_footnote() - add additional footnotes to table
 
 And many more! https://gt.rstudio.com/
-]
 
 ---
 # {gtsummary} advanced customization
@@ -1028,7 +1022,6 @@ names(tbl_summary_1)
 ## [11] "fmt_fun"
 ```
 
-.pull-left[
 
 ```r
 pluck(tbl_summary_1, "table_body") %&gt;% head()
@@ -1045,8 +1038,12 @@ pluck(tbl_summary_1, "table_body") %&gt;% head()
 ## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;          0.871
 ## 6 grade    level    I              68 (34%)    35 (36%)    33 (32%)     NA
 ```
-]
-.pull-right[
+
+
+---
+# Appendix: {gtsummary} Advanced
+
+
 
 ```r
 pluck(tbl_summary_1, "gt_calls") %&gt;% head(n = 4)
@@ -1065,7 +1062,6 @@ pluck(tbl_summary_1, "gt_calls") %&gt;% head(n = 4)
 ## $tab_style_text_indent
 ## gt::tab_style(style = gt::cell_text(indent = gt::px(10), align = 'left'),locations = gt::cells_body(columns = gt::vars(label),rows = row_type != 'label'))
 ```
-]
 
 ???
 

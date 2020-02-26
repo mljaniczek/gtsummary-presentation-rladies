@@ -80,13 +80,6 @@ tbl_summary_1 <- sm_trial %>%
 ```{r, include=FALSE}
 # gtsave(tbl_summary_1 %>% as_gt(), filename = "images/tbl_summary_2.png")
 ```
-.medium[
-- `by =` argument to split table by a categorical variable
-- `add_p()` - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
-- `add_overall()` - to add back in an overall summary of the data (not split by the `by` argument)
-
-
-]
 ]
 .pull-right[
 <br>
@@ -95,6 +88,15 @@ tbl_summary_1 <- sm_trial %>%
 ]
 
 ???
+
+.medium[
+- `by =` argument to split table by a categorical variable
+- `add_p()` - default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence/ Fisher's exact test for categorical (Fisher's for low expected counts).
+- `add_overall()` - to add back in an overall summary of the data (not split by the `by` argument)
+
+
+]
+
 - Go slow here
 
 - summarizing a data set is the MOST important analysis
@@ -126,11 +128,10 @@ tbl_summary_3 <- sm_trial %>%
   tbl_summary(
     by = trt,
     statistic = list(
-      all_continuous() ~ "{mean} ({sd})", 
-      all_categorical() ~ "{n} / {N} ({p}%)"),
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} / {N} ({p}%)"), 
     label = age ~ "Patient Age") %>%
   add_p(test = all_continuous() ~ "t.test")
-
 ```
 ```{r, include=FALSE}
 # gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")

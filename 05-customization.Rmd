@@ -64,22 +64,18 @@ tbl_summary_4 <- sm_trial %>%
 ```{r, include=FALSE}
 # gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
 ```
-
-???
-
-.large[
-- Report levels for the response variable.
-- Report mean instead of median (using glue)
-- Modify the default rounding for age.
-- Specify t-test for all continuous variables and Fisher's test for response variable.
-
-
 ]
-]
+
 .pull-right[
 <p align="center"><img src="images/tbl_summary_4.png" width=100%></p>
 ]
 
+???
+
+- Report levels for the response variable.
+- Report mean instead of median (using glue)
+- Modify the default rounding for age.
+- Specify t-test for all continuous variables and Fisher's test for response variable.
 
 - further discuss formula notation
     - just like {gt} can use both select helpers OR characters vector of names
@@ -100,17 +96,14 @@ tbl_summary_4 <- sm_trial %>%
 
     1. Convert the table to a {gt} object with the `as_gt()` function.
 
-    1. Continue formatting as a {gt} table with any {gt} function.
+    1. Continue formatting as a {gt} table with any {gt} function. https://gt.rstudio.com/
 ]
 
 ???
 
 Discuss `as_gt()` and how to use
 
-
----
-# {gtsummary} tbl_summary() advanced customization
-.large[**Advanced Customization Using {gt}**
+**Advanced Customization Using {gt}**
 
 - tab_header() - add a table title
 
@@ -121,7 +114,6 @@ Discuss `as_gt()` and how to use
 - tab_footnote() - add additional footnotes to table
 
 And many more! https://gt.rstudio.com/
-]
 
 ---
 # {gtsummary} advanced customization

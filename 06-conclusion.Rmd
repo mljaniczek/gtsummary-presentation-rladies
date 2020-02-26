@@ -134,16 +134,18 @@ Contributors: Esther Drill, Jessica Flynn, Stephanie Lobaugh
 names(tbl_summary_1)
 ```
 
-.pull-left[
 ```{r}
 pluck(tbl_summary_1, "table_body") %>% head()
 ```
-]
-.pull-right[
+
+
+---
+# Appendix: {gtsummary} Advanced
+
+
 ```{r}
 pluck(tbl_summary_1, "gt_calls") %>% head(n = 4)
 ```
-]
 
 ???
 
